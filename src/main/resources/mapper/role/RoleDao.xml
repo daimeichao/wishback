@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jiading.modules.back.role.dao.RoleDao">
+
+    <select id="getJSlist" parameterType="map" resultType="map">
+        select r.pid XLH, r.rolename JSMC, r.remark BZ,
+        (select count(*) from t_user_role ur where ur.roleid = r.pid) UC
+        from t_role r where r.del = 0
+        <if test="JSMC != null and JSMC != '' ">
+            AND r.rolename LIKE CONCAT('%',#{JSMC},'%')
+        </if>
+        ORDER BY r.add_time DESC
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+
+    <select id="getJSlistCount" parameterType="map" resultType="int">
+        SELECT count(*)
+        from t_role r where r.del = 0
+		<if test="JSMC != null and JSMC != '' ">
+			AND r.rolename LIKE CONCAT('%',#{JSMC},'%')
+		</if>
+    </select>
+
+    <insert id="insJS" parameterType="map" keyProperty="pid" useGeneratedKeys="true">
+        INSERT INTO t_role(rolename, remark) VALUES (#{JSMC}, #{BZ})
+    </insert>
+
+    <select id="getLSlist" parameterType="map" resultType="map">
+		select ur.roleid JSID, ur.userid yhid, u.name yhmc
+		from t_user_role ur
+		left join t_user u on  u.pid = ur.userid
+		where ur.roleid = #{JSID} and u.del = '0'
+		<if test="LSMC != null and LSMC != '' ">
+			AND u.name LIKE CONCAT('%',#{LSMC},'%')
+		</if>
+        ORDER BY ur.add_time DESC
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+
+    <select id="getLSlistCount" parameterType="map" resultType="int">
+        select count(*)
+		from t_user_role ur
+		left join t_user u on  u.pid = ur.userid
+		where ur.roleid = #{JSID} and u.del = '0'
+		<if test="LSMC != null and LSMC != '' ">
+			AND u.name LIKE CONCAT('%',#{LSMC},'%')
+		</if>
+<!--		<if test="JSID != null and JSID != '' ">-->
+<!--			AND ur.roleid = #{JSID}-->
+<!--		</if>-->
+<!--        <if test="LSMC != null and LSMC != '' ">-->
+<!--            AND yhmc LIKE CONCAT('%',#{LSMC},'%')-->
+<!--        </if>-->
+<!--        <if test="LSID != null and LSID != '' ">-->
+<!--            AND yhid LIKE CONCAT('%',#{LSID},'%')-->
+<!--        </if>-->
+    </select>
+
+    <!-- 获取所有系统用户 -->
+    <select id="getAllTeacher" parameterType="map" resultType="map">
+        select pid id, name from t_user
+        where del ='0' and type = '2'
+    </select>
+
+    <!-- 查询已绑定的系统用户id列表 -->
+    <select id="getBdLsIdsList" parameterType="map" resultType="java.lang.String">
+        SELECT userid LSXLH
+        FROM
+        t_user_role  WHERE roleid = #{JSID} GROUP BY userid ORDER BY userid
+    </select>
+
+	<select id="getWBDLsList" parameterType="map" resultType="map">
+		select pid as id,name from t_user
+		where del ='0' and type = '2'
+		<if test="ids != null ">
+			AND pid NOT IN
+			<foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="getUserInfoByUserId" parameterType="map" resultType="map">
+        SELECT
+	h.zgh AS NO,
+	h.xm AS NAME,
+	`i`.`department_id` AS `FK_Dept`,
+	e.name as FK_DeptName,
+	'1' AS `Type`
+
+
+FROM
+	fjcpcudw.t_gxjg_jzgjbxx h left join `fjcpcmwczxy`.`user_dtype_relation` i on i.user_id =h.zgh left join
+	(
+SELECT
+	`a`.`DWDM` AS `id`,
+	`a`.`DWMC` AS `name`,
+	'1' AS `p_id`,
+	'0' AS `del_status`,
+IF
+	( ( `a`.`DWLBM` = '1' ), '1', '11' ) AS `d_type`,
+	'0' AS `o_type`,
+	NULL AS `seal_url`
+FROM
+	`fjcpcudw`.`t_gxxx_yxsdwxx` `a`
+UNION ALL
+SELECT
+	'1' AS `id`,
+	'福建船政交通职业学院' AS `name`,
+	'0' AS `p_id`,
+	'0' AS `del_status`,
+	'0' AS `d_type`,
+	'0' AS `o_type`,
+	NULL AS `seal_url` UNION ALL
+SELECT
+	`a`.`ZYDM` AS `id`,
+	`a`.`ZYDMC` AS `name`,
+	`a`.`DWH` AS `p_id`,
+	'0' AS `del_status`,
+	'2' AS `d_type`,
+	'0' AS `o_type`,
+	NULL AS `seal_url`
+FROM
+	`fjcpcudw`.`t_gxjx_xszyxx` `a`
+WHERE
+	`a`.`ZYDM` IN (
+SELECT
+	`b`.`ZYDM`
+FROM
+	( `fjcpcudw`.`t_gxjx_xszyxx` `b` JOIN `fjcpcudw`.`t_gxxx_bjjbxx` `c` ON ( ( `c`.`ZYDM` = `b`.`ZYDM` ) ) )
+WHERE
+	( ( `c`.`BJDM` IS NOT NULL ) AND ( LEFT ( `c`.`BJMC`, 2 ) >= '18' ) )
+	) UNION ALL
+SELECT
+	`a`.`BJDM` AS `id`,
+	`a`.`BJMC` AS `name`,
+	`a`.`ZYDM` AS `p_id`,
+	'0' AS `del_status`,
+	'3' AS `d_type`,
+	'0' AS `o_type`,
+	NULL AS `seal_url`
+FROM
+	`fjcpcudw`.`t_gxxx_bjjbxx` `a`
+WHERE
+	( LEFT ( `a`.`BJMC`, 2 ) >= '18' )
+) as e on e.id=`i`.`department_id`
+
+
+WHERE
+		h.zgh =  #{userId}
+	and i.isdel='0' group by h.zgh
+
+
+UNION ALL
+SELECT
+	j.xh,
+	j.xm,
+	k.`department_id` AS `FK_Dept`,
+	e.name as FK_DeptName,
+	'0' AS `Type`
+
+
+
+FROM
+	fjcpcudw.t_gxxs_xsjbxx j left join `fjcpcmwczxy`.`user_dtype_relation` k on k.user_id =j.xh left join
+	(
+SELECT
+	`a`.`DWDM` AS `id`,
+	`a`.`DWMC` AS `name`,
+	'1' AS `p_id`,
+	'0' AS `del_status`,
+IF
+	( ( `a`.`DWLBM` = '1' ), '1', '11' ) AS `d_type`,
+	'0' AS `o_type`,
+	NULL AS `seal_url`
+FROM
+	`fjcpcudw`.`t_gxxx_yxsdwxx` `a`
+UNION ALL
+SELECT
+	'1' AS `id`,
+	'福建船政交通职业学院' AS `name`,
+	'0' AS `p_id`,
+	'0' AS `del_status`,
+	'0' AS `d_type`,
+	'0' AS `o_type`,
+	NULL AS `seal_url` UNION ALL
+SELECT
+	`a`.`ZYDM` AS `id`,
+	`a`.`ZYDMC` AS `name`,
+	`a`.`DWH` AS `p_id`,
+	'0' AS `del_status`,
+	'2' AS `d_type`,
+	'0' AS `o_type`,
+	NULL AS `seal_url`
+FROM
+	`fjcpcudw`.`t_gxjx_xszyxx` `a`
+WHERE
+	`a`.`ZYDM` IN (
+SELECT
+	`b`.`ZYDM`
+FROM
+	( `fjcpcudw`.`t_gxjx_xszyxx` `b` JOIN `fjcpcudw`.`t_gxxx_bjjbxx` `c` ON ( ( `c`.`ZYDM` = `b`.`ZYDM` ) ) )
+WHERE
+	( ( `c`.`BJDM` IS NOT NULL ) AND ( LEFT ( `c`.`BJMC`, 2 ) >= '18' ) )
+	) UNION ALL
+SELECT
+	`a`.`BJDM` AS `id`,
+	`a`.`BJMC` AS `name`,
+	`a`.`ZYDM` AS `p_id`,
+	'0' AS `del_status`,
+	'3' AS `d_type`,
+	'0' AS `o_type`,
+	NULL AS `seal_url`
+FROM
+	`fjcpcudw`.`t_gxxx_bjjbxx` `a`
+WHERE
+	( LEFT ( `a`.`BJMC`, 2 ) >= '18' )
+) as e on e.id=`k`.`department_id`
+
+
+WHERE
+	j.xh = #{userId}
+
+	LIMIT 1
+
+
+
+    </select>
+
+	<select id="ifXzls" parameterType="map" resultType="map">
+	  select XLH from t_gxzyzx_xzls_zhxy where LSXLH=#{userId}
+	</select>
+
+	<select id="getStudentsByTeacherCourse" parameterType="map" resultType="map">
+		SELECT e.department_id classId,f.name className,d.id,d.name FROM fjcpcudw.t_gxjx_xsxkxx a
+		INNER JOIN fjcpcudw.t_gxjx_kcb b ON b.XKKH = a.XKKH
+		INNER JOIN fjcpcudw.t_gxjx_jxrwb c ON c.XKKH = b.XKKH
+		INNER JOIN fjcpcmwczxy.sys_user d ON d.id = a.XH AND d.del_flag = '0'
+		INNER JOIN fjcpcmwczxy.lot_department_user e ON e.user_id = d.id AND e.del_status = '0'
+		INNER JOIN fjcpcmwczxy.lot_department f ON f.id = e.department_id AND f.del_status = '0'
+		WHERE 1=1
+		<if test="teacherIds!=null and teacherIds.size > 0">
+		AND c.JSZGH IN(
+		<foreach collection ="teacherIds" item="item" open="" separator="," close="">
+			#{item}
+		</foreach>
+		)
+		</if>
+		GROUP BY d.id
+	</select>
+
+
+
+	<select id="getAllDepartment" parameterType="map" resultType="map">
+		SELECT id,name,1 as level FROM fjcpcmwczxy.lot_department_kszx WHERE del_status = '0' AND d_type = '1'
+	</select>
+
+	<select id="getAllMajors" parameterType="map" resultType="map">
+		SELECT id,name,p_id, 2 as level FROM fjcpcmwczxy.lot_department_kszx WHERE del_status = '0' AND d_type = '2'
+	</select>
+
+	<!--<select id="getMajorsByDepId">-->
+		<!--SELECT id,name FROM lot_department WHERE p_id = #{id} AND del_status = '0' AND d_type = '2'-->
+	<!--</select>-->
+
+	<select id="getAllClasses" parameterType="map" resultType="map">
+		SELECT id,name,p_id,3 as level FROM fjcpcmwczxy.lot_department_kszx WHERE del_status = '0' AND d_type = '3'
+	</select>
+
+	<select id="getAllClasses2" parameterType="map" resultType="map">
+		SELECT id classId,name className,p_id FROM fjcpcmwczxy.lot_department WHERE del_status = '0' AND d_type = '3'
+	</select>
+
+	<!--<select id="getClassesByMajorId">-->
+		<!--SELECT id,name FROM lot_department WHERE p_id = #{id} AND del_status = '0' AND d_type = '3'-->
+	<!--</select>-->
+
+	<select id="getAllCourse" parameterType="map" resultType="map">
+		SELECT b.XKKH courseId,b.KCMC courseName,a.BJDM classId FROM fjcpcudw.t_gxjx_xsxkxx a
+		INNER JOIN fjcpcudw.t_gxjx_qkbxx b ON b.XKKH = a.XKKH
+		WHERE LEFT ( a.XKSJ , 4 ) >= (YEAR (now()) - 1) GROUP BY b.XKKH
+	</select>
+
+	<select id="getAllCourseByLSID" parameterType="map" resultType="map">
+		SELECT XKKH courseId,KCMC courseName FROM fjcpcudw.t_gxjx_jxrwb
+		WHERE LEFT ( XN , 4 ) >= (YEAR (now()) - 1) AND JSZGH = #{id}
+	</select>
+
+	<select id="getCourseClassRelation" resultType="map">
+		SELECT XKKH courseId,BJDM classId FROM fjcpcudw.t_gxjx_xsxkxx
+		WHERE LEFT ( XN , 4 ) >= (YEAR (now()) - 1) GROUP BY XKKH,BJDM
+	</select>
+
+	<select id="getAllStudents" parameterType="map" resultType="map">
+		SELECT b.id,b.name,a.department_id classId FROM fjcpcmwczxy.lot_department_user a
+		INNER JOIN fjcpcmwczxy.sys_user b ON b.id = a.user_id
+		WHERE a.del_status = '0'
+	</select>
+
+	<select id="getExaminationRooms" parameterType="map" resultType="map">
+		SELECT JSH id,JSMS name FROM fjcpcudw.t_gxjx_jsjbxx WHERE KSKYF = 'T' AND SFYX = 'T'
+	</select>
+</mapper>

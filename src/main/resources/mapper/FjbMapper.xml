@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiading.modules.back.mapper.FjbMapper">
+
+    <resultMap id="BaseResultMap" type="com.jiading.modules.back.domain.Fjb">
+            <id property="pid" column="pid" jdbcType="INTEGER"/>
+            <result property="ssxmid" column="ssxmid" jdbcType="INTEGER"/>
+            <result property="fjmc" column="fjmc" jdbcType="VARCHAR"/>
+            <result property="fjdz" column="fjdz" jdbcType="VARCHAR"/>
+            <result property="fjdx" column="fjdx" jdbcType="INTEGER"/>
+            <result property="tjsj" column="tjsj" jdbcType="TIMESTAMP"/>
+            <result property="xgsj" column="xgsj" jdbcType="TIMESTAMP"/>
+            <result property="fjlx" column="fjlx" jdbcType="VARCHAR"/>
+            <result property="sczk" column="sczk" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        pid,ssxmid,fjmc,
+        fjdz,fjdx,tjsj,
+        xgsj,sczk,fjlx
+    </sql>
+
+    <select id="getFjByXmid" parameterType="map" resultType="map">
+        select * from t_fjb where ssxmid = #{pid} and sczk = '0'
+    </select>
+
+    <update id="delFjByXmid">
+        update t_fjb set sczk = '1' where ssxmid = #{pid}
+    </update>
+</mapper>

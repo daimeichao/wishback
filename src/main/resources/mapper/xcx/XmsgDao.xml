@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jiading.modules.xcx.dao.XmsgDao">
+    <update id="updateyd">
+        update t_user_msg set ydzt = 1,ydsj=#{ydsj} where sczk=0 and pid=#{pid}
+    </update>
+    <select id="getXmsgList" parameterType="map" resultType="map">
+        SELECT c.pid,c.jsrid,a.fsrid,a.bt,a.nr,a.lx,DATE_FORMAT(a.fssj,'%Y-%m-%d %H:%i:%s') fssj,a.zt,c.ydzt,b.xm,b.tx
+        from t_user_msg c left join t_msg a on c.xxid = a.pid LEFT JOIN t_user b on a.fsrid = b.pid WHERE a.sczk = 0 and c.sczk = 0 and a.zt=0
+        <if test="jsrid != null and jsrid != '' ">
+            and c.jsrid = #{jsrid}
+        </if>
+        order by  c.ydzt,fssj desc
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+
+    <select id="getXmsgListCount" parameterType="map" resultType="int">
+        SELECT count(*)
+        from t_user_msg c left join t_msg a on c.xxid = a.pid LEFT JOIN t_user b on a.fsrid = b.pid WHERE a.sczk = 0 and c.sczk = 0 and a.zt=0
+        <if test="jsrid != null and jsrid != '' ">
+            and c.jsrid = #{jsrid}
+        </if>
+    </select>
+
+    <select id="getXmsgByid" parameterType="map" resultType="map">
+        SELECT a.xmid,d.pid,a.fsrid,a.bt,a.nr,a.lx,DATE_FORMAT(a.fssj,'%Y-%m-%d %H:%i:%s') fssj,a.zt,d.ydzt,d.jsrid,b.xm,b.tx,c.xmmc
+        from t_user_msg d left join t_msg a on d.xxid = a.pid  LEFT JOIN t_user b on a.fsrid = b.pid left join t_xm c on a.xmid =c.pid WHERE d.sczk=0 and a.sczk = 0 and a.zt=0
+        <if test="pid != null and pid != '' ">
+            and d.pid = #{pid}
+        </if>
+    </select>
+</mapper>

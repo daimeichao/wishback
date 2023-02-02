@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiading.modules.littlewish.mapper.TwishMapper">
+    <update id="editwishbyid">
+        UPDATE t_wish
+        SET wishusername=#{name},
+            wish_content=#{content},
+            adder=#{adder},
+            wish_time=NOW(),
+            wish_audit_state=0,
+            wish_audit_remark="",
+            wish_auditid=null
+        where pid = #{pid}
+    </update>
+
+    <select id="getwishById" resultType="com.jiading.modules.littlewish.domain.Wish">
+        select *
+        FROM t_wish
+        WHERE t_wish.del = 0
+          and t_wish.wishuserid = #{pid}
+        order by add_time desc
+    </select>
+    <select id="getwishByPid" resultType="com.jiading.modules.littlewish.domain.Wish">
+        select pid, wishusername, wish_content, adder, wish_time, wish_audit_remark
+        FROM t_wish
+        WHERE t_wish.del = 0
+          and pid = #{pid}
+    </select>
+    <select id="getfullwishbyid" resultType="com.jiading.modules.littlewish.domain.Wish">
+        SELECT t_wish.pid,
+               t_wish.wishusername,
+               t_wish.wish_content,
+               t_wish.adder,
+               t_wish.wish_time,
+               t_wish.wish_audit_remark,
+               t_wish_claimant.claimant,
+               t_wish_claimant.expressage,
+               t_wish_claimant.claimant_audit_remark,
+               t_wish_file.url
+        FROM t_wish,
+             t_wish_claimant,
+             t_wish_file
+        WHERE t_wish.del = 0
+          AND t_wish.pid = #{pid}
+          AND t_wish_claimant.wishid = #{pid}
+          AND t_wish_file.wishid = (SELECT pid
+                                    FROM t_wish_claimant
+                                    where wishid = #{pid})
+    </select>
+    <select id="getfullwishbypid" resultType="com.jiading.modules.littlewish.domain.Wish">
+        SELECT
+            a.pid,
+            a.wishusername,
+            a.wish_content,
+            a.adder,
+            a.wish_time,
+            a.wish_audit_remark,
+            b.claimant_audit_remark,
+            b.claimant,
+            b.realize_time,
+            b.claimantid,
+            b.expressage,
+            b.claimant_audit_state
+        FROM
+            t_wish AS a
+                LEFT JOIN ( SELECT * FROM t_wish_claimant WHERE claimant_audit_state != '2' ) AS b ON a.pid = b.wishid
+        WHERE
+            a.del = '0'
+          and a.pid=#{pid}
+    </select>
+    <select id="geturlbypid" resultType="com.jiading.modules.littlewish.domain.TWishFile">
+        SELECT url
+        FROM t_wish_file
+        where t_wish_file.wishid = (SELECT pid FROM t_wish_claimant WHERE wishid = #{pid})
+    </select>
+</mapper>

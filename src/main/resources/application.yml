@@ -1,0 +1,68 @@
+﻿#服务端口号
+server:
+  max-http-header-size: 10000000
+  tomcat:
+    basedir: /home/temp
+    uri-encoding: UTF-8
+    max-threads: 1000
+    min-spare-threads: 30
+  port: 8126
+  address: 0.0.0.0
+
+spring:
+  # 环境 dev|test|prod
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 1000000000
+      max-request-size: 1000000000
+#mybatis:
+#  typeAliasesPackage: com.jiading.modules.*.entity
+#  mapper-locations: classpath*:/mapper/**/*.xml
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  typeAliasesPackage: com.jiading.modules.*.entity
+  global-config:
+  #数据库相关配置
+      db-config:
+        #主键类型  AUTO:"数据库ID自增", INPUT:"用户输入ID", ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
+        id-type: AUTO
+        #驼峰下划线转换
+        column-underline: true
+        #字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"
+        field-strategy: NOT_NULL
+        #逻辑删除已删除1
+        logic-delete-value: 1
+        #逻辑删除未删除1  实体类加注解@TableLogic
+        logic-not-delete-value: 0
+      banner: false
+    #原生配置
+  configuration:
+    #驼峰下划线转换
+    map-underscore-to-camel-case: true
+    #缓存配置
+    cache-enabled: false
+    #查询某些字段为空也返回
+    call-setters-on-nulls: true
+    jdbc-type-for-null: 'null'
+
+#日志打印的其他方式
+logging:
+  level:
+    com.jiading.modules.*.dao: debug
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#spring:
+#  devtools:
+#    restart:
+#      enabled: true  #设置开启热部署
+##      additional-paths: src/main/java #重启目录
+##      exclude: WEB-INF/**
+##  freemarker:
+##    cache: false    #页面不加载缓存，修改即时生效
+
+
+
+

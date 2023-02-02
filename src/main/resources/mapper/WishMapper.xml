@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiading.modules.back.mapper.WishMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jiading.modules.back.domain.Wish">
+        <id column="id" property="pid" />
+        <result column="wishusername" property="wishusername" />
+        <result column="wishuserid" property="wishuserid" />
+        <result column="adder" property="adder" />
+        <result column=" wish_time" property="wishTime" />
+        <result column="wish_audit_state" property="wishAuditState" />
+        <result column="wish_audit_remark" property="wishAuditRemark" />
+        <result column="wish_auditid" property="wishAuditid" />
+        <result column=" wish_state" property="wishState" />
+        <result column="operatorid" property="operatorid" />
+        <result column="add_time" property="addTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="del" property="del" />
+        <result column="sort" property="sort" />
+    </resultMap>
+  <sql id="Base_Column_List">
+pid as id, wishusername, wishuserid, wish_content, adder, wish_time, wish_audit_state,
+wish_audit_remark, wish_auditid, operatorid , add_time , update_time,sort
+  </sql>
+    <!--    通过心愿id获取到附件地址-->
+    <select id="geturl" parameterType="map" resultType="map">
+        select url from t_wish_file where wishid=#{wishid}
+    </select>
+    <select id="getListById" resultType="java.util.Map" parameterType="map">
+        select a.pid as id,b.pid as tid, a.wishusername, a.wishuserid,a.wish_content,
+        a.adder, a.wish_time, a.wish_audit_state,a.wish_audit_remark,
+        a.wish_auditid, a.wish_state,a.operatorid ,a.add_time as fbat,
+        a.update_time as fbut,a.sort,a.price,
+        b.claimant, b.claimantid,date_format(b.realize_time,'%Y-%m-%d')realize_time,b.expressage, b.claimant_audit_state,b.claimant_audit_remark,b.wishid,
+        b.claimant_auditid, b.operatorid ,b.add_time as sxat ,b.update_time as sxut,c.name,group_concat(c.url) as url
+        from t_wish as a
+        left join t_wish_claimant as b
+        on a.pid=b.wishid and b.claimant_audit_state !='2'
+        left join t_wish_file as c
+        on c.wishid=b.pid and c.del='0'
+        where a.del='0' and a.pid=#{id}
+        GROUP BY a.pid
+    </select>
+    <select id="wishList"  resultType="java.util.Map">
+        select a.pid as id, b.pid as tid,wishusername, wishuserid,wish_content, adder, wish_time, wish_audit_state,wish_audit_remark,
+        wish_auditid, wish_state,a.operatorid ,a.add_time as fbat , a.update_time as fbut,sort,a.price,
+        claimant, claimantid,date_format(realize_time,'%Y-%m-%d')realize_time,expressage, claimant_audit_state,claimant_audit_remark,b.wishid,
+        claimant_auditid, b.operatorid ,b.add_time as sxat ,b.update_time as sxut
+        from t_wish as a
+        left join (SELECT * from t_wish_claimant WHERE claimant_audit_state!='2') as b
+        on  a.pid=b.wishid
+        where a.del='0'
+        <if test="wishusername != null and wishusername != '' ">
+            and wishusername LIKE CONCAT('%',#{wishusername},'%')
+        </if>
+        <if test="wish_audit_state != null and wish_audit_state != '' ">
+            and wish_audit_state LIKE CONCAT('%',#{wish_audit_state},'%')
+        </if>
+        <if test="claimant != null and claimant != '' ">
+            and claimant LIKE CONCAT('%',#{claimant},'%')
+        </if>
+        <if test="claimant_audit_state!= null and claimant_audit_state != '' ">
+            and claimant_audit_state LIKE CONCAT('%',#{claimant_audit_state},'%')
+        </if>
+
+        ORDER BY  a.add_time desc
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+    <select id="getListByMap" resultType="java.util.Map">
+        select *from t_wish
+        where del = '0'
+        <if test="wishusername != null and wishusername != '' ">
+         and wishusername LIKE CONCAT('%',#{wishusername},'%')
+         </if>
+
+        ORDER BY add_time desc
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+
+    <select id="getSXCount" resultType="java.lang.Integer">
+        select count( * )
+        from t_wish
+        where del = '0' and wish_audit_state='0'
+        <if test="wishusername != null and wishusername != '' ">
+            and wishusername LIKE CONCAT('%',#{wishusername},'%')
+        </if>
+        ORDER BY add_time desc
+    </select>
+    <select id="getListCountByMap" resultType="java.lang.Integer">
+        select count(*)
+        from t_wish as a
+        left join (SELECT * from t_wish_claimant WHERE claimant_audit_state!='2') as b
+        on  a.pid=b.wishid
+        where a.del='0'
+        <if test="wishusername != null and wishusername != '' ">
+            and wishusername LIKE CONCAT('%',#{wishusername},'%')
+        </if>
+        <if test="wish_audit_state != null and wish_audit_state != '' ">
+            and wish_audit_state LIKE CONCAT('%',#{wish_audit_state},'%')
+        </if>
+        <if test="claimant != null and claimant != '' ">
+            and claimant LIKE CONCAT('%',#{claimant},'%')
+        </if>
+        <if test="claimant_audit_state!= null and claimant_audit_state != '' ">
+            and claimant_audit_state LIKE CONCAT('%',#{claimant_audit_state},'%')
+        </if>
+    </select>
+    <!--根据id进行删除-->
+    <update id="deleteWishById">
+        update t_wish set del = '1' where pid = #{id}
+    </update>
+    <update id="deleteWishById1">
+        update t_wish set del = '1' where pid = #{pid}
+    </update>
+<!--    根据id进行修改-->
+    <update id="updateWishById">
+        update t_wish
+        set wishusername = #{wishusername}, wishuserid = #{wishuserid}, adder = #{adder}, wish_time =now(), wish_audit_state = #{wish_audit_state},
+        wish_audit_remark = #{wish_audit_remark}, wish_auditid = #{wish_auditid}, wish_state = #{wish_state}, operatorid = #{operatorid}, add_time = #{add_time}, update_time = #{update_time},
+        sort = #{sort}
+        where pid = #{id}
+    </update>
+
+    <select id="getSHList"  resultType="java.util.Map">
+       select * from t_wish
+        where del='0' and wish_audit_state='0'
+        <if test="wishusername != null and wishusername != '' ">
+            and wishusername LIKE CONCAT('%',#{wishusername},'%')
+        </if>
+        ORDER BY  add_time desc
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+<!--    修改实现附件-->
+    <update id="UpdSxfj" parameterType="map">
+        update t_wish_file
+        <set>
+            name=#{name} ,
+            url=#{tuurl}  ,
+            update_time=now(),
+
+        </set>
+        where wishid = #{tid}
+    </update>
+<!--    心愿列表修改认领状态为已认领-->
+    <update id="updCliamant" parameterType="map">
+        update t_wish set wish_state ='1' where pid=#{id}
+    </update>
+<!--    完愿列表修改认领人信息-->
+    <update id="updrl" parameterType="map">
+        update t_wish_claimant
+            <set>
+                claimant=#{claimant},realize_time=#{realize_time},update_time=now(),
+            <if test="expressage !=null and  expressage!=''">
+                expressage=#{expressage},
+            </if>
+            </set>
+            where wishid=#{id} and pid=#{tid}
+    </update>
+<!--    心愿列表的实现按钮-->
+    <insert id="UpdSx" parameterType="map" useGeneratedKeys="true" keyProperty="ttid" >
+        insert into t_wish_claimant( wishid,claimant,claimantid, realize_time,expressage,claimant_audit_state,add_time,del)
+        values(#{id}, #{claimant},#{claimantid},#{realize_time},#{expressage},'0',now(),'0')
+        </insert>
+    <update id="myUpdateById" parameterType="map">
+     update t_wish
+        <set>
+            wish_audit_state=#{wish_audit_state},
+            wish_auditid=null,
+            wish_audit_remark='',
+            update_time=now(),
+            <if test="wishusername !=null and wishusername!=''"  >
+                wishusername=#{wishusername},
+            </if>
+            <if test="adder !=null and adder!=''"  >
+                adder=#{adder},
+            </if>
+            <if test="wish_time!=null and wish_time!=''"  >
+                wish_time=#{wish_time},
+            </if>
+            <if test=" wish_content !=null and wish_content!=''"  >
+                wish_content=#{wish_content},
+            </if>
+            <if test="sort !=null and sort!=''"  >
+                sort=#{sort},
+            </if>
+        </set>
+        where pid = #{id}
+
+    </update>
+    <update id="myDjeUpdateById" parameterType="map">
+        update t_wish set price=#{price} where pid = #{id}
+    </update>
+<!--    审核心愿修改-->
+    <update id="myUpdateById2" parameterType="map">
+        update t_wish
+        set wish_audit_state=#{wish_audit_state},sort=#{sort},wish_audit_remark=#{wish_audit_remark},wish_auditid=#{wish_auditid}
+        where pid = #{pid}
+    </update>
+<!--    查询用户名-->
+    <select id="getname" parameterType="map" resultType="map">
+        select pid,name,CONCAT(nick,'(',name,')') nick from t_user where nick is not null and del='0'
+    </select>
+<!--    修改实现表-->
+    <update id="myUpdateById1" parameterType="map">
+     update t_wish_claimant
+        <set>
+            <if test="claimant !=null and claimant!=''"  >
+                claimant=#{claimant},
+            </if>
+            <if test="expressage !=null and expressagee!=''"  >
+                expressage=#{expressage},
+            </if>
+        </set>
+        where pid = #{tid}
+    </update>
+    <update id="updatesort" parameterType="map">
+        update t_wish
+        <set>
+        <if test="sort !=null and sort!=''"  >
+            sort=#{sort},
+        </if></set>
+         where pid=#{id}
+    </update>
+<!--    set claimant = #{claimant}, expressage = #{expressage}, realize_time = #{realize_time}-->
+    <select id="getdetail" parameterType="map" resultType="map">
+        select * from t_wish where del='0' and pid=#{id}
+    </select>
+    <select id="getifTu" parameterType="map" resultType="int">
+        select count(*) from t_wish_file where wishid=#{id} and del='0'
+    </select>
+    <insert id="addTu" parameterType="map">
+        insert into t_wish_file(wishid,name,url,add_time) values (#{tid},#{fjname},#{fjurl},now())
+    </insert>
+    <insert id="addTu1" parameterType="map">
+        insert into t_wish_file(wishid,name,url,add_time) values (#{ttid},#{fjname},#{fjurl},now())
+    </insert>
+    <insert id="addfb" parameterType="map"  >
+        insert into t_wish (wishusername,wishuserid,wish_time,wish_content,adder,operatorid)
+         values (#{wishusername},#{wishuserid},now(),#{wish_content},#{adder},#{operatorid})
+    </insert>
+    <select id="getWishName" parameterType="map" resultType="string">
+        select name from  t_user where pid=#{wishuserid}
+    </select>
+    <update id="delfj" parameterType="map">
+        update t_wish_file set del='1'  where wishid=#{tid}
+    </update>
+</mapper>

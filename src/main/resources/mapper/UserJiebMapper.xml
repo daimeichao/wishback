@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiading.modules.back.mapper.UserJiebMapper">
+
+    <resultMap id="BaseResultMap" type="com.jiading.modules.back.domain.UserJieb">
+        <id property="pid" column="pid" jdbcType="INTEGER"/>
+        <result property="yhid" column="yhid" jdbcType="INTEGER"/>
+        <result property="xmid" column="xmid" jdbcType="INTEGER"/>
+        <result property="sczk" column="sczk" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        pid,yhid,xmid,
+        sczk,jbrq
+    </sql>
+    <select id="getUserInfoByXmid" resultType="com.jiading.modules.back.domain.User">
+        select user.* from t_user_jieb jieb
+        left join t_user user
+        on jieb.yhid = user.pid
+        where jieb.sczk = '0' and user.sczk ='0'
+        and jieb.xmid = #{pid}
+        <if test="xm != null and xm != ''">
+            and user.xm LIKE CONCAT('%',#{xm},'%')
+        </if>
+        ORDER BY user.pid DESC
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+        <if test="size != null and size != ''">
+            limit #{size}
+        </if>
+    </select>
+    <select id="getUserCountByXmid" resultType="java.lang.Integer">
+        select count(*) from t_user_jieb jieb
+        left  join t_user user
+        on jieb.yhid = user.pid
+        where jieb.sczk = '0' and user.sczk ='0'
+        and jieb.xmid = #{pid}
+        <if test="xm != null and xm != ''">
+            and user.xm = #{xm}
+        </if>
+    </select>
+    <select id="getUserCountByXmid2" resultType="java.lang.Integer">
+        select count(*) from t_user_jieb jieb
+        left  join t_user user
+        on jieb.yhid = user.pid
+        where jieb.sczk = '0' and user.sczk ='0'
+        and jieb.xmid = #{pid}
+    </select>
+
+    <select id="getUserInfoByXmidWithJyzk" resultType="com.jiading.modules.back.domain.User">
+        select user.pid,user.tx from t_user_jieb jieb
+        left join t_user user
+        on jieb.yhid = user.pid
+        where jieb.sczk = '0' and user.sczk ='0' and user.jyzk = '0'
+        and jieb.xmid = #{pid}
+        <if test="size != null and size != ''">
+            limit #{size}
+        </if>
+    </select>
+    <select id="getUserCountByXmidWithJyzk" resultType="java.lang.Integer">
+        select count(*) from t_user_jieb jieb
+        left  join t_user user
+        on jieb.yhid = user.pid
+        where jieb.sczk = '0' and user.sczk ='0' and user.jyzk = '0'
+        and jieb.xmid = #{pid}
+    </select>
+
+    <select id="getXmJbrList" resultType="com.jiading.modules.back.domain.User">
+        select u.* from t_user_jieb jieb
+        left join t_user u
+        on jieb.yhid = u.pid
+        where jieb.sczk = '0' and u.sczk = '0'
+        and jieb.xmid = #{xmid}
+    </select>
+
+    <select id="getXmJbrListWithDealName" resultType="com.jiading.modules.back.domain.User">
+        select u.xm,u.pid,u.tx from t_user_jieb jieb
+        left join t_user u
+        on jieb.yhid = u.pid
+        where jieb.sczk = '0' and u.sczk = '0'
+        and jieb.xmid = #{xmid}
+    </select>
+    <select id="getIfJieBangWithXmidAndYhid" resultType="com.jiading.modules.back.domain.UserJieb">
+        select yhid,xmid from t_user_jieb
+        where sczk = '0' and yhid = #{yhid}
+
+        <if test="ids != null and ids.size() > 0 ">
+            and xmid in
+            <foreach collection="ids" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+
+
+    </select>
+    <select id="getIfJieBangWithXmid" resultType="map">
+        select count(*) as count,xmid from t_user_jieb
+        where sczk = '0'
+        <if test="ids != null and ids.size() > 0 ">
+            and xmid in
+            <foreach collection="ids" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        group by xmid
+
+
+    </select>
+    <select id="getOneByYhidAndXmid" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_jieb
+        where
+        yhid = #{yhid,jdbcType=NUMERIC}
+        AND xmid = #{xmid,jdbcType=NUMERIC}
+        AND sczk = '0'
+    </select>
+    <select id="getJieBangCountByYhid" resultType="java.lang.Integer">
+        select count(*) from t_user_jieb jb
+        left join t_xm xm
+        on jb.xmid = xm.pid
+        where jb.sczk = '0' and jb.yhid = #{yhid}
+        and xm.sczk ='0' and xm.shzt = '2'
+    </select>
+    <update id="deleteByXmidAndYhid">
+        update t_user_jieb
+         set sczk = '1'
+        where
+        xmid = #{xmid,jdbcType=NUMERIC}
+         AND yhid = #{yhid,jdbcType=NUMERIC}
+</update>
+
+
+</mapper>

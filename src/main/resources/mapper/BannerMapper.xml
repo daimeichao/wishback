@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiading.modules.back.mapper.BannerMapper">
+
+    <resultMap id="BaseResultMap" type="com.jiading.modules.back.domain.Banner">
+            <id column="pid" property="pid" />
+            <result column="content" property="content" />
+            <result column="url" property="url" />
+            <result column="link" property="link" />
+            <result column="type" property="type" />
+            <result column="del" property="del" />
+            <result column="add_time" property="addTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        pid,content,url,link,type,del,add_time
+    </sql>
+    <update id="updateNridNull">
+        update t_banner set nrid = NULL  where pid =#{pid}
+    </update>
+    <select id="getListByMap" resultType="java.util.Map">
+        select
+        <include refid="Base_Column_List"/>
+        from t_banner
+        where del = '0'
+        <if test="pid != null and pid !='' ">
+            and pid = #{pid}
+        </if>
+        <if test="type != null and type !='' ">
+            and type = #{type}
+        </if>
+        ORDER BY add_time desc
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+    <select id="getListCountByMap" resultType="java.lang.Integer">
+        select
+        count(*)
+        from t_banner
+        where del = '0'
+        <if test="pid != null and pid !='' ">
+            and pid = #{pid}
+        </if>
+        <if test="type != null and type !='' ">@TableLogic
+            and type = #{type}
+        </if>
+    </select>
+</mapper>

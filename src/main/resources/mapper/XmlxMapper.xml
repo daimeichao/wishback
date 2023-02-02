@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiading.modules.back.mapper.XmlxMapper">
+
+    <resultMap id="BaseResultMap" type="com.jiading.modules.back.domain.Xmlx">
+            <id property="pid" column="pid" jdbcType="INTEGER"/>
+            <result property="lxmc" column="lxmc" jdbcType="VARCHAR"/>
+            <result property="tjsj" column="tjsj" jdbcType="TIMESTAMP"/>
+            <result property="sczk" column="sczk" jdbcType="VARCHAR"/>
+            <result property="parentid" column="parentid" jdbcType="INTEGER"/>
+            <result property="lxdj" column="lxdj" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        pid,lxmc,tjsj,parentid,lxdj,
+        sczk
+    </sql>
+
+    <insert id="addXmlx">
+        INSERT into t_xmlx(lxmc,parentid,lxdj) VALUES (#{lxmc},#{parentid},#{lxdj})
+    </insert>
+
+    <update id="updateXmlx">
+        update t_xmlx set lxmc = #{lxmc},lxdj=#{lxdj},sczk=#{sczk} where pid = #{pid}
+    </update>
+    <update id="delJbxmbyYhid">
+        update t_user_jieb set sczk = 1 where yhid = #{yhid} and xmid = #{xmid}
+    </update>
+
+    <insert id="addRylb">
+        INSERT into t_rylb(zwmc,sczk) VALUES (#{zwmc},'0')
+    </insert>
+
+    <update id="updateRylb">
+        update t_rylb set zwmc = #{zwmc},sczk=#{sczk} where pid = #{pid}
+    </update>
+    <update id="updateXmifjb">
+        update t_xm set jbzt = 0 where t_xm.sczk=0 and pid = #{xmid}
+    </update>
+
+    <select id="getSubXmlxByXmid" resultType="com.jiading.modules.back.domain.Xmlx">
+        select xmlx.* from  t_xmlx xmlx
+        left join t_xm_xmlx z
+        on xmlx.pid = z.xmlxid
+        where z.sczk = '0' and xmlx.sczk ='0'
+        and z.xmid = #{pid} and xmlx.lxdj > 1
+        order by xmlx.lxdj asc
+    </select>
+
+    <select id="getAllXmlxByXmid" resultType="com.jiading.modules.back.domain.Xmlx">
+        select xmlx.* from  t_xmlx xmlx
+        left join t_xm_xmlx z
+        on xmlx.pid = z.xmlxid
+        where z.sczk = '0' and xmlx.sczk ='0'
+        and z.xmid = #{pid}
+        order by xmlx.lxdj asc
+    </select>
+
+    <select id="getXmlxList" resultType="java.util.Map">
+        select pid,lxmc,DATE_FORMAT(tjsj,'%Y-%m-%d %H:%i:%S')tjsj,parentid,lxdj
+        from t_xmlx
+        where sczk = 0
+        <if test="lxmc != null and lxmc !='' ">
+            and lxmc LIKE CONCAT('%',#{lxmc},'%')
+        </if>
+        <if test="parentid != null and parentid !='' ">
+            and parentid = #{parentid}
+        </if>
+        order by pid desc
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+
+    <select id="getXmlxListCount" resultType="java.lang.Integer">
+        select count(*)
+        from t_xmlx
+        where sczk = 0
+        <if test="parentid != null and parentid !='' ">
+            and parentid = #{parentid}
+        </if>
+        <if test="lxmc != null and lxmc !='' ">
+            and lxmc LIKE CONCAT('%',#{lxmc},'%')
+        </if>
+    </select>
+
+    <select id="getParentidList" resultType="java.util.Map">
+        select pid,lxmc,DATE_FORMAT(tjsj,'%Y-%m-%d')tjsj,parentid,lxdj
+        from t_xmlx
+        where sczk = 0
+        <if test="lxmc != null and lxmc !='' ">
+            and lxmc LIKE CONCAT('%',#{lxmc},'%')
+        </if>
+        <if test="parentid != null and parentid !='' ">
+            and parentid = #{parentid}
+        </if>
+        order by pid desc
+    </select>
+
+    <select id="getAllXmlx" parameterType="map" resultType="map">
+        select * from t_xmlx where sczk = '0' order by pid desc
+    </select>
+
+    <select id="getRylbList" resultType="java.util.Map">
+        select pid,zwmc,sczk
+        from t_rylb
+        where sczk = 0
+        <if test="zwmc != null and zwmc !='' ">
+            and zwmc LIKE CONCAT('%',#{zwmc},'%')
+        </if>
+        order by pid desc
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+
+    <select id="getRylbListCount" resultType="java.lang.Integer">
+        select count(*)
+        from t_rylb
+        where sczk = 0
+        <if test="zwmc != null and zwmc !='' ">
+            and zwmc LIKE CONCAT('%',#{zwmc},'%')
+        </if>
+    </select>
+    <select id="getjbcountbyxmid" resultType="java.lang.Integer">
+        SELECT count(yhid) FROM t_user_jieb WHERE t_user_jieb.sczk=0 and xmid=#{xmid}
+    </select>
+    <select id="getXmListNewImport" resultType="com.jiading.modules.back.domain.Xm">
+        select * from t_xm
+        where sczk = '0' and pid > 159
+    </select>
+
+    <update id="delXmlxByXmid">
+        update t_xm_xmlx set sczk = '1' where xmid = #{pid}
+    </update>
+
+    <select id="getXmlxByXmid" parameterType="map" resultType="map">
+        select * from t_xm_xmlx where xmid = #{pid} where sczk = '0'
+    </select>
+
+</mapper>

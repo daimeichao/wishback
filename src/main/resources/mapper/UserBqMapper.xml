@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiading.modules.back.mapper.UserBqMapper">
+
+    <resultMap id="BaseResultMap" type="com.jiading.modules.back.domain.UserBq">
+            <id property="pid" column="pid" jdbcType="INTEGER"/>
+            <result property="yhid" column="yhid" jdbcType="INTEGER"/>
+            <result property="bqid" column="bqid" jdbcType="INTEGER"/>
+            <result property="sczk" column="sczk" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        pid,yhid,bqid,
+        sczk
+    </sql>
+</mapper>

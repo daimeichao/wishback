@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiading.modules.ytj.dao.IndexDao">
+    <select id="getCompleteWishList" resultType="map">
+        select tw.pid,tw.wishusername,tw.wish_content,tw.price,twc.claimant,twc.pid as twcpid
+        from t_wish as tw
+        join t_wish_claimant as twc on tw.pid=twc.wishid and twc.del=0 and twc.claimant_audit_state=1
+        where tw.del=0 and tw.wish_audit_state=1 and tw.wish_state=2
+        order by tw.sort asc ,tw.update_time desc
+        limit 16
+    </select>
+    <select id="getClaimWishList" resultType="map">
+        select wishusername,wish_content,pid
+        from t_wish
+        where del=0 and wish_state = 0 and wish_audit_state =1
+        order by sort asc ,add_time desc
+        limit 15
+    </select>
+
+    <select id="getWishList" resultType="map">
+        select tw.wishusername,tw.wish_content,tw.adder,tw.pid,DATE_FORMAT(tw.wish_time,'%Y-%m-%d') as wish_time,tw.wish_state
+        from t_wish as tw
+        where tw.del=0 and tw.wish_audit_state=1
+        <if test="state !='' and state != null">
+            and wish_state = #{state}
+        </if>
+        order by tw.sort asc ,tw.update_time desc
+        limit 50
+    </select>
+
+    <select id="getCompleteWishFileList" resultType="map">
+        select url
+        from t_wish_file
+        where del=0 and wishid=#{twcpid}
+    </select>
+    <select id="getWishDeatail" resultType="map">
+        select tw.wishusername,tw.wish_content,tw.adder,tw.pid,DATE_FORMAT(tw.wish_time,'%Y-%m-%d') as wish_time,tw.wish_state
+        from t_wish as tw
+        where pid=#{pid}
+    </select>
+    <select id="getWishclaimant" resultType="map">
+        select claimant,pid
+        from t_wish_claimant
+        where wishid=#{pid} and claimant_audit_state=1 and del=0
+        limit 1
+    </select>
+    <select id="confirmWished" resultType="integer">
+        select count(*) from t_wish
+        where del=0 and wish_state = 0 and wish_audit_state =1 and pid = #{wishid}
+    </select>
+    <update id="updateWished" >
+        update t_wish
+        set wish_state = 2
+        where pid = #{wishid}
+    </update>
+    <insert id="addWish" parameterType="map">
+        insert into t_wish (wishusername,wishuserid,wish_content,adder,wish_time,wish_audit_state) VALUES
+                           (#{wishusername},#{wishuserid},#{wish_content},#{adder},now(),1)
+    </insert>
+    <insert id="addWishClaimant" parameterType="map">
+        insert into t_wish_claimant (wishid,claimant,claimantid,claimant_audit_state,realize_time)
+        values (#{wishid},#{claimant},#{claimantid},1,now());
+    </insert>
+</mapper>

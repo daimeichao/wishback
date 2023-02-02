@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiading.modules.back.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.jiading.modules.back.domain.User">
+            <id column="pid" property="pid" />
+            <result column="name" property="name" />
+            <result column="nick" property="nick" />
+            <result column="portrait" property="portrait" />
+            <result column="phone" property="phone" />
+            <result column="account" property="account" />
+            <result column="password" property="password" />
+            <result column="openid" property="openid" />
+            <result column="type" property="type" />
+            <result column="add_time" property="addTime" />
+            <result column="jyzk" property="jyzk" />
+            <result column="del" property="del" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        pid,name,nick,portrait,phone,account,openid,type,add_time,jyzk
+    </sql>
+
+    <insert id="insertRole">
+        insert into t_user_role (roleid,userid) values (#{jsid},#{yhid})
+    </insert>
+
+    <select id="getUserBqById" resultType="com.jiading.modules.back.domain.Bq">
+        SELECT * FROM t_bq bq
+        left join t_user_bq ubq
+        on bq.pid = ubq.bqid
+        WHERE bq.del ='0' and ubq.del = '0'
+        and ubq.yhid = #{pid}
+    </select>
+    <select id="getOneByPidAndSczkAndJyzk" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user
+        where
+        pid = #{pid,jdbcType=NUMERIC}
+        AND del = #{del,jdbcType=VARCHAR}
+        AND jyzk = #{jyzk,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getListByMap" resultType="java.util.Map">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user
+        where del = '0'
+        <if test="name != null and name !='' ">
+            and name like concat('%',#{name},'%')
+        </if>
+        <if test="nick != null and nick !='' ">
+            and nick like concat('%',#{nick},'%')
+        </if>
+        <if test="phone != null and phone !='' ">
+            and phone like concat('%',#{phone},'%')
+        </if>
+        <if test="account != null and account !='' ">
+            and account like concat('%',#{account},'%')
+        </if>
+        <if test="type != null and type !='' ">
+            and type = #{type}
+        </if>
+        <if test="jyzk != null and jyzk !='' ">
+            and jyzk = #{jyzk}
+        </if>
+        ORDER BY add_time desc
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+    <select id="getListCountByMap" resultType="java.lang.Integer">
+        select
+        count(*)
+        from t_user
+        where del = '0'
+        <if test="name != null and name !='' ">
+            and name like concat('%',#{name},'%')
+        </if>
+        <if test="nick != null and nick !='' ">
+            and nick like concat('%',#{nick},'%')
+        </if>
+        <if test="phone != null and phone !='' ">
+            and phone like concat('%',#{phone},'%')
+        </if>
+        <if test="account != null and account !='' ">
+            and account like concat('%',#{account},'%')
+        </if>
+        <if test="type != null and type !='' ">
+            and type = #{type}
+        </if>
+        <if test="jyzk != null and jyzk !='' ">
+            and jyzk = #{jyzk}
+        </if>
+    </select>
+    <select id="getOneByPhone" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user
+        where
+        phone = #{phone,jdbcType=VARCHAR}
+        AND del = '0'
+    </select>
+    <select id="getOneByPhoneAndPid" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user
+        where
+        phone = #{phone,jdbcType=VARCHAR}
+        AND del = '0'
+        <if test="pid !=null and pid != ''">
+            and pid != #{pid}
+        </if>
+    </select>
+    <select id="getInfo" resultType="java.util.Map">
+        SELECT pid,zwmc FROM t_rylb WHERE del = '0'
+    </select>
+    <update id="updateLbAndMmByPid">
+        update t_user
+        set lb = #{lb,jdbcType=VARCHAR}
+        <if test="mm != null and mm != ''">
+            ,mm = #{mm,jdbcType=VARCHAR}
+        </if>
+        where
+        pid = #{pid,jdbcType=NUMERIC}
+    </update>
+    <update id="updatePassword">
+        update t_user
+        set mm = #{mm,jdbcType=VARCHAR}
+        where
+        pid = #{pid,jdbcType=NUMERIC}
+    </update>
+    <update id="updatePasswordAndLb">
+        update t_user
+        set password = #{mm,jdbcType=VARCHAR}
+        where
+        pid = #{pid,jdbcType=NUMERIC}
+    </update>
+    <select id="getOneByPhoneOrXm" resultMap="BaseResultMap">
+        select pid,name,nick,portrait,phone,account,password,type,add_time,jyzk
+        from t_user
+        where
+        account = #{xm,jdbcType=VARCHAR}
+        AND del ='0'
+    </select>
+    <select id="getRoleByJsidAndYhid" resultType="java.lang.Integer">
+        select count(*) from t_userrole
+        where yhid = #{yhid} and jsid = #{jsid}
+    </select>
+
+    <select id="getUserRoleListByPid" resultType="java.lang.String">
+        select roleid from t_user_role
+        where userid = #{pid}
+    </select>
+
+    <select id="getSchoolInfo" resultType="java.util.Map">
+        SELECT pid,mc,DATE_FORMAT(tjsj,'%Y-%m-%d') tjsj FROM t_school WHERE del = '0' order by tjsj desc
+    </select>
+    <select id="selectListWithSchool" resultType="com.jiading.modules.back.domain.User">
+        select u.pid,u.xm,u.tx,s.mc,u.byyx from t_user u
+        left join t_school s
+        on u.byyx = s.pid
+        where u.del = '0' and s.del = '0'
+        <if test="yhidList != null and yhidList.size() > 0">
+            and u.pid in
+            <foreach collection="yhidList" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by u.pid asc
+    </select>
+</mapper>

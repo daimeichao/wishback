@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiading.modules.back.mapper.ConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.jiading.modules.back.domain.Config">
+            <id property="pid" column="pid" jdbcType="INTEGER"/>
+            <result property="bdxz" column="bdxz" jdbcType="VARCHAR"/>
+            <result property="sczk" column="sczk" jdbcType="VARCHAR"/>
+            <result property="tjsj" column="tjsj" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        pid,bdxz,sczk,
+        tjsj
+    </sql>
+</mapper>

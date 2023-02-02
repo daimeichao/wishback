@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiading.modules.back.mapper.XmMapper">
+
+    <resultMap id="BaseResultMap" type="com.jiading.modules.back.domain.Xm">
+            <id property="pid" column="pid" jdbcType="INTEGER"/>
+            <result property="dz" column="dz" jdbcType="VARCHAR"/>
+            <result property="kssj" column="kssj" jdbcType="TIMESTAMP"/>
+            <result property="jzsj" column="jzsj" jdbcType="TIMESTAMP"/>
+            <result property="tjsj" column="tjsj" jdbcType="TIMESTAMP"/>
+            <result property="jd" column="jd" jdbcType="VARCHAR"/>
+            <result property="wd" column="wd" jdbcType="VARCHAR"/>
+            <result property="xmnrid" column="xmnrid" jdbcType="INTEGER"/>
+            <result property="xmmc" column="xmmc" jdbcType="VARCHAR"/>
+            <result property="xmyq" column="xmyq" jdbcType="VARCHAR"/>
+            <result property="wcsx" column="wcsx" jdbcType="VARCHAR"/>
+            <result property="jbje" column="jbje" jdbcType="DECIMAL"/>
+            <result property="xmly" column="xmly" jdbcType="VARCHAR"/>
+            <result property="xmlx" column="xmlx" jdbcType="VARCHAR"/>
+            <result property="jbzt" column="jbzt" jdbcType="VARCHAR"/>
+            <result property="bz" column="bz" jdbcType="VARCHAR"/>
+            <result property="yzdw" column="yzdw" jdbcType="VARCHAR"/>
+            <result property="lxr" column="lxr" jdbcType="VARCHAR"/>
+            <result property="lxfs" column="lxfs" jdbcType="VARCHAR"/>
+            <result property="fbrid" column="fbrid" jdbcType="INTEGER"/>
+            <result property="shzt" column="shzt" jdbcType="VARCHAR"/>
+            <result property="shrid" column="shrid" jdbcType="INTEGER"/>
+            <result property="bhly" column="bhly" jdbcType="VARCHAR"/>
+            <result property="sczk" column="sczk" jdbcType="VARCHAR"/>
+            <result property="xmdd" column="xmdd" jdbcType="VARCHAR"/>
+            <result property="sftj" column="sftj" jdbcType="VARCHAR"/>
+            <result property="sfxj" column="sfxj" jdbcType="VARCHAR"/>
+            <result property="jazt" column="jazt" jdbcType="VARCHAR"/>
+            <result property="jabz" column="jabz" jdbcType="VARCHAR"/>
+            <result property="jbrs" column="jbrs" jdbcType="INTEGER"/>
+            <result property="nddj" column="nddj" jdbcType="VARCHAR"/>
+            <result property="email" column="email" jdbcType="VARCHAR"/>
+            <result property="shsj" column="shsj" jdbcType="TIMESTAMP"/>
+            <result property="bm" column="bm" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        pid,dz,kssj,
+        jzsj,tjsj,jd,
+        wd,xmnrid,xmmc,
+        xmyq,wcsx,jbje,
+        xmly,xmlx,jbzt,
+        bz,yzdw,lxr,
+        lxfs,fbrid,shzt,
+        shrid,bhly,sczk,
+        xmdd,sftj,sfxj,
+        jazt,jabz,jbrs,
+        nddj,email,shsj,
+        bm
+    </sql>
+
+    <select id="getXmInfo" parameterType="map" resultType="map">
+        select a.*,DATE_FORMAT(a.kssj,'%Y-%m-%d %H:%i:%S') kssj,DATE_FORMAT(a.jzsj,'%Y-%m-%d %H:%i:%S') jzsj,b.vt xmnr from t_xm a
+        left join t_dzd b on a.xmnrid = b.pid
+        where a.sczk = '0' and a.pid = #{pid}
+    </select>
+    <select id="getJbrsByPidAndSczk" resultType="int">
+        select jbrs
+        from t_xm
+        where
+        pid = #{xmid,jdbcType=NUMERIC}
+        AND sczk = '0'
+    </select>
+</mapper>

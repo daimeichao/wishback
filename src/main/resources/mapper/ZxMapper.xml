@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiading.modules.back.mapper.ZxMapper">
+
+    <resultMap id="BaseResultMap" type="com.jiading.modules.back.domain.Zx">
+            <id property="pid" column="pid" jdbcType="INTEGER"/>
+            <result property="zxmc" column="zxmc" jdbcType="VARCHAR"/>
+            <result property="zxnrid" column="zxnrid" jdbcType="INTEGER"/>
+            <result property="dz" column="dz" jdbcType="VARCHAR"/>
+            <result property="tjsj" column="tjsj" jdbcType="TIMESTAMP"/>
+            <result property="fbrid" column="fbrid" jdbcType="INTEGER"/>
+            <result property="sczk" column="sczk" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        pid,zxmc,zxnrid,
+        dz,tjsj,fbrid,
+        sczk
+    </sql>
+    <update id="delZx">
+        update t_zx set sczk=1 where pid = #{pid}
+    </update>
+
+    <select id="getZxList" resultType="java.util.Map">
+        select a.pid,a.zxmc,DATE_FORMAT(a.tjsj,'%Y-%m-%d %H:%i:%S') tjsj,c.xm as fbrxm,a.fbrid,a.ly,a.dz,a.zxnrid,b.vt as zxnr
+        from t_zx a left join t_dzd b on a.zxnrid = b.pid left join t_user c on a.fbrid = c.pid
+        where a.sczk = 0
+        <if test="zxmc != null and zxmc !='' ">
+            and a.zxmc LIKE CONCAT('%',#{zxmc},'%')
+        </if>
+        <if test="zxnr != null and zxnr !='' ">
+            and  b.vt LIKE CONCAT('%',#{zxnr},'%')
+        </if>
+        <if test="fbrxm != null and fbrxm !='' ">
+            and  c.xm LIKE CONCAT('%',#{fbrxm},'%')
+        </if>
+        order by tjsj desc
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+
+    <select id="getZxListCount" resultType="java.lang.Integer">
+        select count(*)
+        from t_zx a left join t_dzd b on a.zxnrid = b.pid left join t_user c on a.fbrid = c.pid
+        where a.sczk = 0
+        <if test="zxmc != null and zxmc !='' ">
+            and a.zxmc LIKE CONCAT('%',#{zxmc},'%')
+        </if>
+        <if test="zxnr != null and zxnr !='' ">
+            and  b.vt LIKE CONCAT('%',#{zxnr},'%')
+        </if>
+        <if test="fbrxm != null and fbrxm !='' ">
+            and  c.xm LIKE CONCAT('%',#{fbrxm},'%')
+        </if>
+    </select>
+    <select id="getZxBypid" resultType="java.util.Map">
+        select a.pid,a.zxmc,DATE_FORMAT(a.tjsj,'%Y-%m-%d %H:%i:%S') tjsj,c.xm as fbrxm,a.fbrid,a.ly,a.dz,a.zxnrid,b.vt as zxnr
+        from t_zx a left join t_dzd b on a.zxnrid = b.pid left join t_user c on a.fbrid = c.pid
+        where a.sczk = 0
+        <if test="pid != null and pid !='' ">
+            and a.pid=#{pid}
+        </if>
+    </select>
+
+    <update id="updateZx">
+        update t_zx set zxmc = #{zxmc},dz=#{dz},ly=#{ly} where pid = #{pid}
+    </update>
+
+    <update id="updateDzd">
+        update t_dzd set vt = #{zxnr} where pid = #{zxnrid}
+    </update>
+</mapper>

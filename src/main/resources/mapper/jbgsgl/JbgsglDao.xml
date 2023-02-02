@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jiading.modules.back.jbgsgl.dao.JbgsDao">
+
+    <select id="getXmlist" parameterType="map" resultType="map">
+        select a.pid,a.dz,DATE_FORMAT(a.kssj,'%Y/%m/%d %H:%i:%S') kssj,DATE_FORMAT(a.jzsj,'%Y/%m/%d %H:%i:%S') jzsj,a.jd,a.wd,b.vt,
+               a.xmmc,a.xmyq,a.jbje,a.xmly,c.lxmc,a.jbzt,a.bz,a.yzdw,a.lxr,a.lxfs,a.fbrid,a.shzt,a.shrid,a.bhly,a.sftj,a.sfxj,a.jazt from t_xm a
+        left join t_dzd b on a.xmnrid = b.pid
+        left join t_xmlx c on a.xmlx = c.pid
+        where a.SCZK = 0
+        <if test="xmmc != null and xmmc != '' ">
+            AND a.xmmc LIKE CONCAT('%',#{xmmc},'%')
+        </if>
+		<if test="ifadmin == '0'.toString()">
+			AND a.fbrid = #{pid}
+		</if>
+		<if test="ifadmin == '1'.toString()">
+			AND (a.sftj = '1' or (a.sftj = '0' AND a.fbrid = #{pid}))
+		</if>
+		<if test="kssj != null and kssj != '' ">
+			AND a.kssj <![CDATA[<=]]> #{kssj}
+		</if>
+		<if test="jzsj != null and jzsj != '' ">
+			AND a.jzsj <![CDATA[<=]]> #{jzsj}
+		</if>
+		<if test="xmlx != null and xmlx != '' ">
+			AND xmlx = #{xmlx}
+		</if>
+		<if test="shzt != null and shzt != '' ">
+			AND shzt = #{shzt}
+		</if>
+
+        ORDER BY a.tjsj DESC
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+
+    <select id="getXmlistCount" parameterType="map" resultType="int">
+		select count(*) count from t_xm a
+		left join t_dzd b on a.xmnrid = b.pid
+		left join t_xmlx c on a.xmlx = c.pid
+		where a.SCZK = 0
+		<if test="xmmc != null and xmmc != '' ">
+			AND a.xmmc LIKE CONCAT('%',#{xmmc},'%')
+		</if>
+		<if test="kssj != null and kssj != '' ">
+			AND a.kssj <![CDATA[<=]]> #{kssj}
+		</if>
+		<if test="jzsj != null and jzsj != '' ">
+			AND a.jzsj <![CDATA[<=]]> #{jzsj}
+		</if>
+		<if test="xmlx != null and xmlx != '' ">
+			AND xmlx = #{xmlx}
+		</if>
+		<if test="shzt != null and shzt != '' ">
+			AND shzt = #{shzt}
+		</if>
+    </select>
+
+
+	<select id="getXmlistOnlyDate" parameterType="map" resultType="map">
+		select a.pid,a.dz,DATE_FORMAT(a.kssj,'%Y/%m/%d') kssj,DATE_FORMAT(a.jzsj,'%Y/%m/%d') jzsj,a.jd,a.wd,b.vt,
+		a.xmmc,a.xmyq,a.jbje,a.xmly,c.lxmc,a.jbzt,a.bz,a.yzdw,a.lxr,a.lxfs,a.fbrid,a.shzt,a.shrid,a.bhly,
+		a.xmdd,a.sftj,a.sfxj,a.jazt,a.jabz,a.jbrs,a.nddj,a.email,a.shsj,a.bm
+		from t_xm a
+		left join t_dzd b on a.xmnrid = b.pid
+		left join t_xmlx c on a.xmlx = c.pid
+		where a.SCZK = 0
+		<if test="xmmc != null and xmmc != '' ">
+			AND a.xmmc LIKE CONCAT('%',#{xmmc},'%')
+		</if>
+		<if test="kssj != null and kssj != '' ">
+			AND a.kssj <![CDATA[<=]]> #{kssj}
+		</if>
+		<if test="jzsj != null and jzsj != '' ">
+			AND a.jzsj <![CDATA[<=]]> #{jzsj}
+		</if>
+		<if test="xmlx != null and xmlx != '' ">
+			AND xmlx = #{xmlx}
+		</if>
+		<if test="shzt != null and shzt != '' ">
+			AND shzt = #{shzt}
+		</if>
+		<if test="sftj != null and sftj != '' ">
+			AND sftj = #{sftj}
+		</if>
+		<if test="sfxj != null and sfxj != '' ">
+			AND sfxj = #{sfxj}
+		</if>
+		<if test='bdzt != null and bdzt != "" and bdzt == "有效期内" '>
+			AND a.jzsj >= now()
+		</if>
+		<if test='bdzt != null and bdzt != "" and bdzt == "已过期" '>
+			AND now() > a.jzsj
+		</if>
+		<if test='gbje != null and gbje != "" and gbje == "5000元以下" '>
+			AND a.jbje between 0 and 5000
+		</if>
+		<if test='gbje != null and gbje != "" and gbje == "5000元-10000元" '>
+			AND a.jbje between 5000 and 10000
+		</if>
+		<if test='gbje != null and gbje != "" and gbje == "10000元-30000元" '>
+			AND a.jbje between 10000 and 30000
+		</if>
+		<if test='gbje != null and gbje != "" and gbje == "30000元-50000元" '>
+			AND a.jbje between 30000 and 50000
+		</if>
+		<if test='gbje != null and gbje != "" and gbje == "50000元-100000元" '>
+			AND a.jbje between 50000 and 100000
+		</if>
+		<if test='gbje != null and gbje != "" and gbje == "100000元以上" '>
+			AND a.jbje > 100000
+		</if>
+
+		ORDER BY a.tjsj DESC,a.pid asc
+		<if test="pageindex != null and pagesize != null">
+			LIMIT #{pageindex},#{pagesize}
+		</if>
+	</select>
+
+	<insert id="addXm" useGeneratedKeys="true" keyProperty="pid" parameterType="map">
+		insert into t_xm(dz,kssj,jzsj,jd,wd,xmnrid,xmmc,xmyq,jbje,xmly,xmlx,bz,yzdw,lxr,lxfs,fbrid,shzt,shrid,bhly,sftj,xmdd,email,jbrs,nddj)
+		values(#{dz},#{kssj},#{jzsj},#{jd},#{wd},#{xmnrid},#{xmmc},#{xmyq},#{jbje},#{xmly},#{xmlx},#{bz},#{yzdw},#{lxr},#{lxfs},#{fbrid},'1',#{shrid},#{bhly},#{sftj},#{xmdd},#{email},#{jbrs},#{nddj})
+	</insert>
+
+	<update id="editXm" parameterType="map">
+		update t_xm
+		<trim prefix="set" suffixOverrides=",">
+			<if test="dz!=null">dz=#{dz},</if>
+			<if test="kssj!=null">kssj=#{kssj},</if>
+			<if test="jzsj!=null">jzsj=#{jzsj},</if>
+			<if test="jd!=null">jd=#{jd},</if>
+			<if test="wd!=null">wd=#{wd},</if>
+			<if test="xmnrid!=null">xmnrid=#{xmnrid},</if>
+			<if test="xmmc!=null">xmmc=#{xmmc},</if>
+			<if test="xmyq!=null">xmyq=#{xmyq},</if>
+			<if test="jbje!=null">jbje=#{jbje},</if>
+			<if test="xmly!=null">xmly=#{xmly},</if>
+			<if test="xmlx!=null">xmlx=#{xmlx},</if>
+			<if test="jbzt!=null">jbzt=#{jbzt},</if>
+			<if test="bz!=null">bz=#{bz},</if>
+			<if test="yzdw!=null">yzdw=#{yzdw},</if>
+			<if test="lxr!=null">lxr=#{lxr},</if>
+			<if test="lxfs!=null">lxfs=#{lxfs},</if>
+			<if test="fbrid!=null">fbrid=#{fbrid},</if>
+			<if test="shzt!=null">shzt=#{shzt},</if>
+			<if test="shrid!=null">shrid=#{shrid},</if>
+			<if test="bhly!=null">bhly=#{bhly},</if>
+			<if test="sczk!=null">sczk=#{sczk},</if>
+			<if test="sftj!=null">sftj=#{sftj},</if>
+			<if test="sfxj!=null">sfxj=#{sfxj},</if>
+			<if test="jazt!=null">jazt=#{jazt},</if>
+			<if test="jabz!=null">jabz=#{jabz},</if>
+			<if test="xmdd!=null">xmdd=#{xmdd},</if>
+			<if test="xmdd!=null">xmdd=#{xmdd},</if>
+			<if test="email!=null">email=#{email},</if>
+			<if test="jbrs!=null">jbrs=#{jbrs},</if>
+			<if test="bm!=null">bm=#{bm},</if>
+			<if test="nddj!=null">nddj=#{nddj},</if>
+		</trim>
+		    where pid = #{pid}
+
+	</update>
+
+	<select id="getJbrlist" parameterType="map" resultType="map">
+		select b.zhmc,b.xm,b.lb,b.csly,b.scyfkt,b.byyx,b.phone,b.email,b.lx,
+		b.tx,b.jj,b.dw,b.zycj,b.cgid,b.openid,DATE_FORMAT(b.tjsj,'%Y/%m/%d %H:%i:%S') tjsj
+		from t_user_jieb a
+		left join t_user b on a.yhid = b.pid
+		where a.xmid = #{xmid} and b.sczk = '0' and a.sczk = '0'
+		<if test="xm != null and xm != '' ">
+			AND b.xm LIKE CONCAT('%',#{xm},'%')
+		</if>
+		<if test="phone != null and phone != '' ">
+			AND phone = LIKE CONCAT('%',#{phone},'%')
+		</if>
+		order by b.tjsj desc
+		<if test="pageindex != null and pagesize != null">
+			LIMIT #{pageindex},#{pagesize}
+		</if>
+	</select>
+
+	<select id="getJbrListCount" parameterType="map" resultType="int">
+		select count(*) count
+		from t_user_jieb a
+		left join t_user b on a.yhid = b.pid
+		where a.xmid = #{xmid} and b.sczk = '0' and a.sczk = '0'
+		<if test="xm != null and xm != '' ">
+			AND b.xm LIKE CONCAT('%',#{xm},'%')
+		</if>
+		<if test="phone != null and phone != '' ">
+			AND phone = LIKE CONCAT('%',#{phone},'%')
+		</if>
+	</select>
+
+	<select id="getXmlxList" parameterType="map" resultType="map">
+		select pid,lxmc,DATE_FORMAT(b.tjsj,'%Y/%m/%d %H:%i:%S') tjsj from t_xmlx where sczk = '0'
+		<if test="lxmc != null and lxmc != '' ">
+			AND lxmc = LIKE CONCAT('%',#{lxmc},'%')
+		</if>
+		order by tjsj desc
+		<if test="pageindex != null and pagesize != null">
+			LIMIT #{pageindex},#{pagesize}
+		</if>
+	</select>
+
+	<select id="getXmlxListCount" parameterType="map" resultType="int">
+		select count(*) count from t_xmlx where sczk = '0'
+		<if test="lxmc != null and lxmc != '' ">
+			AND lxmc = LIKE CONCAT('%',#{lxmc},'%')
+		</if>
+	</select>
+
+	<insert id="addXmlx">
+		insert into t_xmlx(lxmc) values(#{lxmc})
+	</insert>
+
+	<update id="editXmlx">
+		update t_xmlx set
+		<trim prefix="set" suffixOverrides=",">
+			<if test="lxmc!=null">dz=#{lxmc},</if>
+			<if test="sczk!=null">sczk=#{sczk},</if>
+			where pid = #{pid}
+		</trim>
+	</update>
+
+
+	<select id="getXmlistbyyhid" parameterType="map" resultType="map">
+		select s.yhid,s.xmid,a.pid,a.dz,DATE_FORMAT(a.kssj,'%Y/%m/%d') kssj,DATE_FORMAT(a.jzsj,'%Y/%m/%d') jzsj,a.jd,a.wd,b.vt,a.sfxj,a.jazt,
+		a.xmmc,a.xmyq,a.jbje,a.xmly,c.lxmc,a.jbzt,a.bz,a.yzdw,a.lxr,a.lxfs,a.fbrid,a.shzt,a.shrid,a.bhly from
+		t_user_jieb s LEFT JOIN	t_xm a on s.xmid = a.pid
+		left join t_dzd b on a.xmnrid = b.pid
+		left join t_xmlx c on a.xmlx = c.pid
+		where  a.SCZK = 0 and s.sczk = 0 and s.yhid=#{yhid}
+		<if test="xmmc != null and xmmc != '' ">
+			AND a.xmmc LIKE CONCAT('%',#{xmmc},'%')
+		</if>
+		<if test="kssj != null and kssj != '' ">
+			AND a.kssj <![CDATA[<=]]> #{kssj}
+		</if>
+		<if test="jzsj != null and jzsj != '' ">
+			AND a.jzsj <![CDATA[<=]]> #{jzsj}
+		</if>
+		<if test="xmlx != null and xmlx != '' ">
+			AND xmlx = #{xmlx}
+		</if>
+		<if test="shzt != null and shzt != '' ">
+			AND shzt = #{shzt}
+		</if>
+
+		ORDER BY a.tjsj DESC,a.pid asc
+		<if test="pageindex != null and pagesize != null">
+			LIMIT #{pageindex},#{pagesize}
+		</if>
+	</select>
+
+	<select id="getXmlistbyyhidCount" parameterType="map" resultType="int">
+		select count(*) count from
+		t_user_jieb s LEFT JOIN	t_xm a on s.xmid = a.pid
+		left join t_dzd b on a.xmnrid = b.pid
+		left join t_xmlx c on a.xmlx = c.pid
+		where a.SCZK = 0  and s.yhid=#{yhid}
+		<if test="xmmc != null and xmmc != '' ">
+			AND a.xmmc LIKE CONCAT('%',#{xmmc},'%')
+		</if>
+		<if test="kssj != null and kssj != '' ">
+			AND a.kssj <![CDATA[<=]]> #{kssj}
+		</if>
+		<if test="jzsj != null and jzsj != '' ">
+			AND a.jzsj <![CDATA[<=]]> #{jzsj}
+		</if>
+		<if test="xmlx != null and xmlx != '' ">
+			AND xmlx = #{xmlx}
+		</if>
+		<if test="shzt != null and shzt != '' ">
+			AND shzt = #{shzt}
+		</if>
+	</select>
+
+
+	<select id="getFbXmlistByuid" parameterType="map" resultType="map">
+		select a.pid,a.dz,DATE_FORMAT(a.kssj,'%Y/%m/%d') kssj,DATE_FORMAT(a.jzsj,'%Y/%m/%d') jzsj,a.jd,a.wd,b.vt,
+		a.xmmc,a.xmyq,a.jbje,a.xmly,c.lxmc,a.jbzt,a.bz,a.yzdw,a.lxr,a.lxfs,a.fbrid,a.shzt,a.shrid,a.bhly,a.sftj,a.sfxj,a.jazt from t_xm a
+		left join t_dzd b on a.xmnrid = b.pid
+		left join t_xmlx c on a.xmlx = c.pid
+		where a.SCZK = 0 and a.fbrid=#{fbrid}
+		<if test="xmmc != null and xmmc != '' ">
+			AND a.xmmc LIKE CONCAT('%',#{xmmc},'%')
+		</if>
+		<if test="kssj != null and kssj != '' ">
+			AND a.kssj <![CDATA[<=]]> #{kssj}
+		</if>
+		<if test="jzsj != null and jzsj != '' ">
+			AND a.jzsj <![CDATA[<=]]> #{jzsj}
+		</if>
+		<if test="xmlx != null and xmlx != '' ">
+			AND xmlx = #{xmlx}
+		</if>
+
+		ORDER BY a.tjsj DESC,a.pid asc
+		<if test="pageindex != null and pagesize != null">
+			LIMIT #{pageindex},#{pagesize}
+		</if>
+	</select>
+
+	<select id="getFbXmlistByuidCount" parameterType="map" resultType="int">
+		select count(*) count from t_xm a
+		left join t_dzd b on a.xmnrid = b.pid
+		left join t_xmlx c on a.xmlx = c.pid
+		where a.SCZK = 0  and a.fbrid=#{fbrid}
+		<if test="xmmc != null and xmmc != '' ">
+			AND a.xmmc LIKE CONCAT('%',#{xmmc},'%')
+		</if>
+		<if test="kssj != null and kssj != '' ">
+			AND a.kssj <![CDATA[<=]]> #{kssj}
+		</if>
+		<if test="jzsj != null and jzsj != '' ">
+			AND a.jzsj <![CDATA[<=]]> #{jzsj}
+		</if>
+		<if test="xmlx != null and xmlx != '' ">
+			AND xmlx = #{xmlx}
+		</if>
+		<if test="shzt != null and shzt != '' ">
+			AND shzt = #{shzt}
+		</if>
+	</select>
+
+	<select id="getCountByCity" resultType="java.util.Map">
+		select sum(lzcs) as lzsl,yhloc,count(pid) as rysl from t_user where t_user.sczk=0 and t_user.yhloc is not null and t_user.yhloc !="" GROUP BY t_user.yhloc
+	</select>
+	<select id="getCountByCity1" resultType="java.util.Map">
+		select t_user.yhloc,count(t_xm.fbrid) as fbsl from t_xm LEFT JOIN t_user on t_xm.fbrid = t_user.pid where t_user.sczk=0 and t_xm.sczk=0 and t_user.yhloc is not null and t_user.yhloc !="" GROUP BY t_user.yhloc
+	</select>
+	<select id="getCountByCity2" resultType="java.util.Map">
+		select sum(lzcs) as value ,yhloc as name  from t_user where t_user.sczk=0 and t_user.yhloc is not null and t_user.yhloc !="" GROUP BY t_user.yhloc
+	</select>
+	<insert id="addXmXmlx">
+		insert into t_xm_xmlx(xmlxid,xmid) values(#{xmlxid},#{xmid})
+	</insert>
+	<select id="getTjhzCount" resultType="java.util.Map">
+		select sum(lzcs) as lzcount ,count(pid) as zjcount from t_user where t_user.sczk=0 and t_user.yhloc is not null and t_user.yhloc !=""
+	</select>
+	<select id="getLbCount" resultType="java.util.Map">
+		select  rylbid,count(pid) as lbcount from t_user where t_user.sczk=0 and t_user.rylbid is not null GROUP BY t_user.rylbid
+	</select>
+	<select id="getXmCount"  resultType="int">
+		select count(*) as sydw from t_xm left join t_user on t_xm.fbrid = t_user.pid where t_xm.sczk=0 and t_xm.shzt=2 and t_user.yhloc is not null and t_user.yhloc !=""
+	</select>
+
+	<delete id="deleteXM" parameterType="integer">
+		delete from t_xm where pid=#{oldoid}
+	</delete>
+</mapper>

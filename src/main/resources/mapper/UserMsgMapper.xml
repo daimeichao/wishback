@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiading.modules.back.mapper.UserMsgMapper">
+
+    <resultMap id="BaseResultMap" type="com.jiading.modules.back.domain.UserMsg">
+            <id property="pid" column="pid" jdbcType="INTEGER"/>
+            <result property="jsrid" column="jsrid" jdbcType="INTEGER"/>
+            <result property="xxid" column="xxid" jdbcType="INTEGER"/>
+            <result property="hfzt" column="hfzt" jdbcType="VARCHAR"/>
+            <result property="ydzt" column="ydzt" jdbcType="VARCHAR"/>
+            <result property="sczk" column="sczk" jdbcType="VARCHAR"/>
+            <result property="ydsj" column="ydsj" jdbcType="TIMESTAMP"/>
+            <result property="hfsj" column="hfsj" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        pid,jsrid,xxid,
+        hfzt,ydzt,sczk,
+        ydsj,hfsj
+    </sql>
+    <select id="getAllBySczkAndXxid"  resultType="com.jiading.modules.back.domain.User">
+        select
+        u.*
+        from t_user_msg um
+        left join t_user u
+        on u.pid = um.jsrid
+        where
+        um.sczk = '0' and u.sczk ='0'
+        AND um.xxid = #{xxid,jdbcType=NUMERIC}
+    </select>
+    <select id="getAllIdBySczkAndXxid"  resultType="java.lang.String">
+        select
+        u.pid
+        from t_user_msg um
+        left join t_user u
+        on u.pid = um.jsrid
+        where
+        um.sczk = '0' and u.sczk ='0'
+        AND um.xxid = #{xxid,jdbcType=NUMERIC}
+    </select>
+    <insert id="insertBatch">
+        insert into t_user_msg(jsrid,xxid)
+        values
+        <foreach collection="userMsgCollection" item="item" separator=",">
+            (#{item.jsrid,jdbcType=NUMERIC},#{item.xxid,jdbcType=NUMERIC})
+        </foreach>
+    </insert>
+    <update id="deleteByXxid">
+        update t_user_msg
+        set sczk = '1'
+        where
+        xxid = #{xxid,jdbcType=NUMERIC}
+    </update>
+</mapper>

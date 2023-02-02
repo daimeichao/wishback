@@ -1,0 +1,67 @@
+package com.jiading.modules.back.mapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.jiading.modules.back.domain.Wish;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
+import java.util.Map;
+@Mapper
+public interface WishMapper extends BaseMapper<Wish> {
+    List<Map<String, Object>> getListByMap(Map<String, Object> params);
+    List<Map<String, Object>> getSHList(Map<String, Object> params);
+    List<Map<String, Object>> wishList(Map<String, Object> params);
+    Map getListById(Map<String, Object> params);
+    List<Map<String,Object>>geturl(Map<String, Object> params);
+    int getListCountByMap(Map<String, Object> params);
+    int   getSXCount(Map<String, Object> params);
+
+    /**
+     * 根据人员id删除单位信息
+     * @param id
+     * @return
+     */
+    int deleteWishById(int id);
+    int deleteWishById1(int id);
+
+    /**
+     * 根据实现表id修改实现心愿信息
+     * @param params
+     * @return
+     */
+//    返回类型是int型，里面是map型参数
+    int updateWishById(Map params);
+
+    /**
+     * 添加单条人员信息数据
+//     * @param params
+     * @return
+     */
+    int myUpdateById(Map<String, Object> params);
+    int UpdSx(Map<String, Object> params);
+    int myDjeUpdateById(Map<String, Object> params);
+    int myUpdateById1(Map<String, Object> params);
+
+    int  myUpdateById2(Map<String, Object> params);
+
+    List<Map> getname(Map<String, Object> params);
+    Map getdetail(Map<String, Object> params);
+
+
+    int getifTu(Map<String, Object> params);
+
+    int addTu1(Map<String, Object> params);
+    int addTu(Map<String, Object> params);
+    int addfb(Map<String, Object> params);
+   String getWishName(Map<String, Object> params);
+
+    int updatesort(Map<String, Object> params);
+
+    int UpdSxfj(Map<String, Object> params);
+
+    int updCliamant(Map<String, Object> params);
+
+    int updrl(Map<String, Object> params);
+
+    int delfj(Map<String, Object> params);
+
+}

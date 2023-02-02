@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiading.modules.xcx.dao.HomeMapper">
+
+
+    <select id="getBdCount" resultType="java.lang.Integer">
+        select count(*) from t_xm where sczk ='0'  and shzt = '2' and sftj='1'
+        <if test="jbzt !=null and jbzt !=''">
+            and jbzt = #{jbzt}
+        </if>
+    </select>
+    <select id="getJBRankUserCountByMonth" resultType="com.jiading.modules.back.domain.BdRank">
+        select count(*) as count,yhid from t_user_jieb jb
+        left join t_xm xm
+        on jb.xmid = xm.pid
+        where jb.sczk = '0'
+        and xm.sczk ='0'
+        and
+        (
+        YEAR(jbrq) = YEAR(CURDATE())
+        and
+        MONTH(jbrq) = MONTH(CURDATE())
+        and DAY(jbrq) != DAY(CURDATE())
+        )
+		GROUP BY yhid
+		order by yhid asc
+    </select>
+    <select id="getJBRankUserCountByYear" resultType="com.jiading.modules.back.domain.BdRank" >
+        select count(*) as count,yhid from t_user_jieb jb
+        left join t_xm xm
+        on jb.xmid = xm.pid
+        where jb.sczk = '0'
+        and xm.sczk ='0'
+        and
+        YEAR(jbrq) = YEAR(CURDATE())
+        and DAY(jbrq) != DAY(CURDATE())
+        GROUP BY yhid
+        order by yhid asc
+    </select>
+    <select id="getJBRankUserCountByQuarter" resultType="com.jiading.modules.back.domain.BdRank">
+        select count(*) as count,yhid from t_user_jieb jb
+        left join t_xm xm
+        on jb.xmid = xm.pid
+        where jb.sczk = '0'
+        and xm.sczk ='0'
+        and
+        (
+            YEAR(jbrq) = YEAR(CURDATE())
+            and QUARTER(jbrq) = QUARTER(CURDATE())
+            and DAY(jbrq) != DAY(CURDATE())
+        )
+        GROUP BY yhid
+         order by yhid asc
+    </select>
+
+    <select id="getJBRankUserJbjeCountByMonthWithSchool" resultType="com.jiading.modules.back.domain.BdRank">
+        select count(*) as count,yhid from t_user_jieb jb
+        left join t_xm xm
+        on jb.xmid = xm.pid
+        where jb.sczk = '0'
+        and xm.sczk ='0'
+        and
+        (
+        YEAR(jbrq) = YEAR(CURDATE())
+        and
+        MONTH(jbrq) = MONTH(CURDATE())
+        and
+		DAY(jbrq) != DAY(CURDATE())
+        )
+		GROUP BY yhid
+		order by yhid asc
+    </select>
+    <select id="getJBRankUserCountByYearWithSchool" resultType="com.jiading.modules.back.domain.BdRank" >
+        select count(*) as count,yhid from t_user_jieb jb
+        left join t_xm xm
+        on jb.xmid = xm.pid
+        where jb.sczk = '0'
+        and xm.sczk ='0'
+        and
+        YEAR(jbrq) = YEAR(CURDATE())
+        and DAY(jbrq) != DAY(CURDATE())
+        GROUP BY yhid
+        order by yhid asc
+    </select>
+    <select id="getJBRankUserJbjeCountByQuarterWithSchool" resultType="com.jiading.modules.back.domain.BdRank">
+        select count(*) as count,yhid from t_user_jieb jb
+        left join t_xm xm
+        on jb.xmid = xm.pid
+        where jb.sczk = '0'
+        and xm.sczk ='0'
+        and
+        (
+            YEAR(jbrq) = YEAR(CURDATE())
+            and QUARTER(jbrq) = QUARTER(CURDATE())
+            and DAY(jbrq) != DAY(CURDATE())
+        )
+        GROUP BY yhid
+        order by yhid asc
+    </select>
+
+
+
+    <select id="getFBRankUserCountByMonth" resultType="com.jiading.modules.back.domain.BdRank">
+        select count(*) as count,fbrid as yhid  from  t_xm xm
+        where  xm.sczk ='0'
+        and
+         (
+        YEAR(tjsj) = YEAR(CURDATE())
+        and
+        MONTH(tjsj) = MONTH(CURDATE())
+        and DAY(tjsj) != DAY(CURDATE())
+        )
+		GROUP BY fbrid
+		order by fbrid asc
+    </select>
+    <select id="getFBRankUserCountByYear" resultType="com.jiading.modules.back.domain.BdRank" >
+        select count(*) as count,fbrid as yhid  from  t_xm xm
+        where  xm.sczk ='0'
+        and
+        YEAR(tjsj) = YEAR(CURDATE())
+        and DAY(tjsj) != DAY(CURDATE())
+		GROUP BY fbrid
+		order by fbrid asc
+    </select>
+    <select id="getFBRankUserCountByQuarter" resultType="com.jiading.modules.back.domain.BdRank">
+        select count(*) as count,fbrid as yhid  from  t_xm xm
+        where xm.sczk ='0'
+        and
+        (
+            YEAR(tjsj) = YEAR(CURDATE())
+            and QUARTER(tjsj) = QUARTER(CURDATE())
+            and DAY(tjsj) != DAY(CURDATE())
+        )
+		GROUP BY fbrid
+		order by fbrid asc
+    </select>
+
+    <select id="getFBRankUserJbjeCountByMonth" resultType="com.jiading.modules.back.domain.BdRank">
+        select sum(jbje) as count,fbrid as yhid  from  t_xm xm
+        where  xm.sczk ='0'
+        and
+         (
+        YEAR(tjsj) = YEAR(CURDATE())
+        and
+        MONTH(tjsj) = MONTH(CURDATE())
+        and DAY(tjsj) != DAY(CURDATE())
+        )
+		GROUP BY fbrid
+		order by fbrid asc
+    </select>
+    <select id="getFBRankUserJbjeCountByYear" resultType="com.jiading.modules.back.domain.BdRank" >
+        select sum(jbje) as count,fbrid as yhid  from  t_xm xm
+        where  xm.sczk ='0'
+        and
+        YEAR(tjsj) = YEAR(CURDATE())
+        and DAY(tjsj) != DAY(CURDATE())
+		GROUP BY fbrid
+		order by fbrid asc
+    </select>
+    <select id="getFBRankUserJbjeCountByQuarter" resultType="com.jiading.modules.back.domain.BdRank">
+        select sum(jbje) as count,fbrid as yhid  from  t_xm xm
+        where xm.sczk ='0'
+        and
+        (
+            YEAR(tjsj) = YEAR(CURDATE())
+            and QUARTER(tjsj) = QUARTER(CURDATE())
+            and DAY(tjsj) != DAY(CURDATE())
+        )
+		GROUP BY fbrid
+		order by fbrid asc
+    </select>
+
+    <select id="getJBRankUserJbjeCountByYear" resultType="com.jiading.modules.back.domain.BdRank">
+        select sum(jbje) as count, yhid  from t_user_jieb jb
+        left join t_xm xm
+        on jb.xmid = xm.pid
+        where jb.sczk = '0'
+        and xm.sczk ='0'
+        and
+        YEAR(jbrq) = YEAR(CURDATE())
+        and DAY(jbrq) != DAY(CURDATE())
+        GROUP BY yhid
+        order by yhid asc
+    </select>
+    <select id="getJBRankUserJbjeCountByQuarter" resultType="com.jiading.modules.back.domain.BdRank">
+        select sum(jbje) as count, yhid  from t_user_jieb jb
+        left join t_xm xm
+        on jb.xmid = xm.pid
+        where jb.sczk = '0'
+        and xm.sczk ='0'
+        and
+        (
+        YEAR(jbrq) = YEAR(CURDATE())
+        and QUARTER(jbrq) = QUARTER(CURDATE())
+        and DAY(jbrq) != DAY(CURDATE())
+        )
+        GROUP BY yhid
+        order by yhid asc
+    </select>
+    <select id="getJBRankUserJbjeCountByMonth" resultType="com.jiading.modules.back.domain.BdRank">
+        select sum(jbje) as count, yhid  from t_user_jieb jb
+        left join t_xm xm
+        on jb.xmid = xm.pid
+        where jb.sczk = '0'
+        and xm.sczk ='0'
+        and
+        (
+        YEAR(jbrq) = YEAR(CURDATE())
+        and MONTH(jbrq) = MONTH(CURDATE())
+        and DAY(jbrq) != DAY(CURDATE())
+        )
+        GROUP BY yhid
+        order by yhid asc
+    </select>
+    <select id="getFBRankUserCountByYear2" resultType="com.jiading.modules.back.domain.BdRank">
+        select count(*) as count,yzdw as dw   from  t_xm xm
+        where  xm.sczk ='0'
+        and
+        YEAR(tjsj) = YEAR(CURDATE())
+        and DAY(tjsj) != DAY(CURDATE())
+		GROUP BY yzdw
+		order by count desc
+		limit #{limit}
+    </select>
+    <select id="getFBRankUserCountByQuarter2" resultType="com.jiading.modules.back.domain.BdRank">
+         select count(*) as count,yzdw as dw  from  t_xm xm
+        where xm.sczk ='0'
+        and
+        (
+            YEAR(tjsj) = YEAR(CURDATE())
+            and QUARTER(tjsj) = QUARTER(CURDATE())
+            and DAY(tjsj) != DAY(CURDATE())
+        )
+		GROUP BY yzdw
+		order by count desc
+		limit #{limit}
+    </select>
+    <select id="getFBRankUserCountByMonth2" resultType="com.jiading.modules.back.domain.BdRank">
+        select count(*) as count,yzdw as dw   from  t_xm xm
+        where  xm.sczk ='0'
+        and
+         (
+        YEAR(tjsj) = YEAR(CURDATE())
+        and
+        MONTH(tjsj) = MONTH(CURDATE())
+        and DAY(tjsj) != DAY(CURDATE())
+        )
+		GROUP BY yzdw
+		order by count desc
+		limit #{limit}
+    </select>
+    <select id="getFBRankUserJbjeCountByQuarter2" resultType="com.jiading.modules.back.domain.BdRank">
+        select sum(jbje) as count,yzdw as dw   from  t_xm xm
+        where  xm.sczk ='0'
+        and
+       (
+            YEAR(tjsj) = YEAR(CURDATE())
+            and QUARTER(tjsj) = QUARTER(CURDATE())
+            and DAY(tjsj) != DAY(CURDATE())
+        )
+		GROUP BY yzdw
+		order by count desc
+		limit #{limit}
+    </select>
+    <select id="getFBRankUserJbjeCountByYear2" resultType="com.jiading.modules.back.domain.BdRank">
+        select sum(jbje) as count,yzdw as dw   from  t_xm xm
+        where  xm.sczk ='0'
+        and
+        YEAR(tjsj) = YEAR(CURDATE())
+        and DAY(tjsj) != DAY(CURDATE())
+		GROUP BY yzdw
+		order by count desc
+		limit #{limit}
+    </select>
+    <select id="getFBRankUserJbjeCountByMonth2" resultType="com.jiading.modules.back.domain.BdRank">
+        select sum(jbje) as count,yzdw as dw   from  t_xm xm
+        where  xm.sczk ='0'
+        and
+        (
+        YEAR(tjsj) = YEAR(CURDATE())
+        and
+        MONTH(tjsj) = MONTH(CURDATE())
+        and DAY(tjsj) != DAY(CURDATE())
+        )
+		GROUP BY yzdw
+		order by count desc
+		limit #{limit}
+    </select>
+    <update id="editCase" parameterType="map">
+        update t_xm set jazt=#{jazt},jabz=#{jabz} where pid=#{pid}
+    </update>
+    <update id="editXMshelves" parameterType="map">
+        update t_xm set sfxj=#{sfxj} where pid=#{pid}
+    </update>
+</mapper>

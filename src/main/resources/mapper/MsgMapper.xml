@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiading.modules.back.mapper.MsgMapper">
+
+    <resultMap id="BaseResultMap" type="com.jiading.modules.back.domain.Msg">
+        <id property="pid" column="pid" jdbcType="INTEGER"/>
+        <result property="fsrid" column="fsrid" jdbcType="INTEGER"/>
+        <result property="jsrid" column="jsrid" jdbcType="INTEGER"/>
+        <result property="bt" column="bt" jdbcType="VARCHAR"/>
+        <result property="nr" column="nr" jdbcType="VARCHAR"/>
+        <result property="lx" column="lx" jdbcType="VARCHAR"/>
+        <result property="zt" column="zt" jdbcType="VARCHAR"/>
+        <result property="tjsj" column="tjsj" jdbcType="TIMESTAMP"/>
+        <result property="fssj" column="fssj" jdbcType="TIMESTAMP"/>
+        <result property="sczk" column="sczk" jdbcType="VARCHAR"/>
+        <result property="xmid" column="xmid" jdbcType="INTEGER"/>
+    </resultMap>
+    <select id="getListByMap" resultType="java.util.Map">
+        select xm.pid xmid,xm.xmmc,
+        u.pid yhid,u.xm,m.*
+        from t_msg m
+        left join t_user u
+        on m.fsrid = u.pid
+        left join t_xm xm
+        on m.xmid = xm.pid
+        where m.sczk = '0'
+        <if test="bt != null and bt !='' ">
+            and m.bt like concat('%',#{bt},'%')
+        </if>
+        <if test="nr != null and nr !='' ">
+            and m.nr like concat('%',#{nr},'%')
+        </if>
+        ORDER BY m.tjsj desc
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+    <select id="getListCountByMap" resultType="java.lang.Integer">
+        select
+        count(*)
+        from t_msg m
+        left join t_user u
+        on m.fsrid = u.pid
+        left join t_xm xm
+        on m.xmid = xm.pid
+        where m.sczk = '0'
+
+        <if test="bt != null and bt !='' ">
+            and m.bt like concat('%',#{bt},'%')
+        </if>
+        <if test="nr != null and nr !='' ">
+            and m.nr like concat('%',#{nr},'%')
+        </if>
+    </select>
+    <select id="getJsrListByMsgIds" resultType="map">
+        select  msg.xxid,u.pid,u.xm from t_user_msg msg
+		left join t_user u
+		on msg.jsrid = u.pid
+		where msg.sczk = '0' AND msg.xxid in (
+        <foreach collection ="xxidList" item="item" open="" separator="," close="">
+            #{item}
+        </foreach>
+		)
+    </select>
+
+</mapper>

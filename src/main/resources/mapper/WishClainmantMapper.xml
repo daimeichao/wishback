@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiading.modules.back.mapper.WishClainmantMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jiading.modules.back.domain.WishClainmant">
+        <id column="id" property="pid" />
+        <result column="wishid" property="wishid" />
+        <result column="claimant" property="claimant" />
+       <result column=" expressage " property="expressage" />
+        <result column="claimantid" property="claimantid" />
+        <result column=" realize_time" property="realizeTime" />
+        <result column=" claimant_audit_state" property="claimantAuditState" />
+        <result column="claimant_audit_remark" property="claimantAuditRemark" />
+        <result column=" claimant_auditid" property="claimantAuditid" />
+        <result column=" operatorid" property="operatorid" />
+        <result column="add_time" property="addTime" />
+        <result column=" update_time" property="updateTime" />
+        <result column="del" property="del" />
+
+    </resultMap>
+    <sql id="Base_Column_List">
+     claimant,pid as id,claimantid,realize_time,expressage,claimant_audit_state,claimant_audit_remark,
+claimant_auditid,operatorid ,add_time ,update_time
+    </sql>
+    <select id="getListByMap" resultType="java.util.Map">
+        select claimant, b.pid as id,claimantid,date_format(realize_time,'%Y-%m-%d')realize_time,expressage,
+        claimant_audit_state,claimant_audit_remark, claimant_auditid, b.operatorid ,
+        b.add_time ,b.update_time ,a.wishusername as wishusername
+        from t_wish_claimant as b
+        left join t_wish as a
+        on b.del='0' and claimant_audit_state ='0'
+        <if test="claimant != null and claimant != '' ">
+            and claimant LIKE CONCAT('%',#{claimant},'%')
+        </if>
+        ORDER BY add_time desc
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+
+    <select id="getSHList" resultType="map">
+        select a.pid as id, b.pid as tid,b.claimant,  b.claimantid, date_format(b.realize_time,'%Y-%m-%d')realize_time,
+               b.expressage, b. claimant_audit_state, b.claimant_audit_remark,
+               b. claimant_auditid, b.operatorid ,b.add_time as sxat ,b.update_time as sxut, a.wish_auditid,
+               a.wish_state,a.operatorid ,a.add_time as fbat , a.update_time as fbut,a.sort,a.price,
+               a.wishusername,a. wishuserid,a.wish_content, a.adder, a.wish_time, a.wish_audit_state,a.wish_audit_remark
+        from t_wish_claimant as b left join t_wish as a on  a.pid=b.wishid
+        where b.del='0' and a.del='0'
+        <if test="wishusername != null and wishusername != '' ">
+            and a.wishusername LIKE CONCAT('%',#{wishusername},'%')
+        </if>
+        <if test="claimant_audit_state != null and claimant_audit_state != '' ">
+            and b.claimant_audit_state=#{claimant_audit_state}
+        </if>
+        <if test="wish_audit_state != null and wish_audit_state != '' ">
+            and a.wish_audit_state LIKE CONCAT('%',#{wish_audit_state},'%')
+        </if>
+        <if test="claimant != null and claimant != '' ">
+            and b.claimant LIKE CONCAT('%',#{claimant},'%')
+        </if>
+        <if test="claimant_audit_state!= null and claimant_audit_state != '' ">
+            and claimant_audit_state LIKE CONCAT('%',#{claimant_audit_state},'%')
+        </if>
+    ORDER BY a.add_time desc
+    <if test="pageindex != null and pagesize != null">
+        LIMIT #{pageindex},#{pagesize}
+    </if>
+    </select>
+
+    <select id="getSXCount" resultType="java.lang.Integer">
+        select count(*)
+        from t_wish_claimant as b left join t_wish as a on  a.pid=b.wishid
+        where b.del='0' and a.del='0'
+        <if test="wishusername != null and wishusername != '' ">
+            and a.wishusername LIKE CONCAT('%',#{wishusername},'%')
+        </if>
+        <if test="claimant_audit_state != null and claimant_audit_state != '' ">
+            and b.claimant_audit_state=#{claimant_audit_state}
+        </if>
+        <if test="wish_audit_state != null and wish_audit_state != '' ">
+            and a.wish_audit_state LIKE CONCAT('%',#{wish_audit_state},'%')
+        </if>
+        <if test="claimant != null and claimant != '' ">
+            and b.claimant LIKE CONCAT('%',#{claimant},'%')
+        </if>
+        <if test="claimant_audit_state!= null and claimant_audit_state != '' ">
+            and claimant_audit_state LIKE CONCAT('%',#{claimant_audit_state},'%')
+        </if>
+    </select>
+    <select id="getListCountByMap" resultType="java.lang.Integer">
+        select count( * )
+        from t_wish_claimant
+        where del = '0'
+        <if test="claimant != null and claimant != '' ">
+            and claimant LIKE CONCAT('%',#{claimant},'%')
+        </if>
+        ORDER BY add_time desc
+    </select>
+
+    <!--根据id进行删除-->
+    <update id="deleteWishById">
+        update t_wish_claimant set del = '1' where pid = #{pid}
+    </update>
+    <update id="updateWishById3">
+        update t_wish
+        <set>
+        <if test="wishusername !=null and wishusername!=''"  >
+            wishusername=#{wishusername},
+        </if>
+            <if test="wishuserid !=null and wishuserid!=''"  >
+                wishuserid=#{wishuserid},
+            </if>
+            <if test="adder !=null and adder!=''"  >
+                adder=#{adder},
+            </if>
+            <if test="wish_audit_state !=null and wish_audit_state!=''"  >
+                wish_audit_state=#{wish_audit_state},
+            </if>
+            <if test="wish_audit_remark !=null and wish_audit_remark!=''"  >
+                wish_audit_remark=#{wish_audit_remark},
+            </if>
+            <if test="sort !=null and sort!=''"  >
+                sort=#{sort},
+            </if>
+        </set>
+        where pid = #{id}
+    </update>
+    <!--根据id进行修改,连接附件表-->
+    <update id="updateWishById" parameterType="map">
+        update t_wish_claimant
+        set claimant = #{claimant}, expressage = #{expressage},
+         realize_time = #{realize_time},claimant_audit_state=#{claimant_audit_state},claimant_audit_remark=#{claimant_audit_remark}
+        where pid = #{pid}
+    </update>
+<!--    修改附件-->
+    <update id="updateFJ" parameterType="map">
+        update t_wish_file
+         set name = #{name},url = #{url},
+         add_time = #{add_time},update_time=#{update_time}
+        where pid = #{tid}
+    </update>
+    <insert id="insertWish">
+        insert into t_wish_claimant(   claimant, expressage, claimantid, realize_time, wish_audit_state,claimant_audit_remark,claimant_auditid, claimant_audit_state, operatorid, add_time, update_time,)
+        values(#{ claimant}, #{expressage}, #{claimantid}, #{realize_time}, #{wish_audit_state}, #{claimant_audit_remark}, #{claimant_auditid}, #{claimant_audit_state},
+               #{operatorid}, #{add_time},#{update_time})
+    </insert>
+    <select id="getdetail" parameterType="map" resultType="map">
+    select a.pid as id, b.pid as tid,a.wishusername,a. wishuserid,a.wish_content, a.adder, a.wish_time, a.wish_audit_state,a.wish_audit_remark,
+    a.wish_auditid, a.wish_state,a.operatorid ,a.add_time as fbat , a.update_time as fbut,a.sort,a.price,
+    b.claimant,  b.claimantid, date_format(b.realize_time,'%Y-%m-%d')realize_time, b.expressage, b. claimant_audit_state, b.claimant_audit_remark,
+    b. claimant_auditid, b.operatorid ,b.add_time as sxat ,b.update_time as sxut,c.name,group_concat(c.url) as url
+    from t_wish_claimant as b left join t_wish as a on a.pid=b.wishid
+    left join t_wish_file as c
+    on c.wishid=b.pid and c.del='0'
+    where b.pid=#{id}
+    </select>
+
+    <update id="upShstatu" parameterType="map" >
+        update t_wish_claimant
+        <set>
+            update_time=now(),
+        <if test="claimant_audit_state !=null and claimant_audit_state!=''"  >
+            claimant_audit_state=#{claimant_audit_state},
+        </if>
+            <if test="claimant_audit_remark !=null and claimant_audit_remark!=''"  >
+                claimant_audit_remark=#{claimant_audit_remark},
+            </if>
+        <if test="claimant_auditid !=null and claimant_auditid !=''"  >
+            claimant_auditid=#{claimant_auditid},
+        </if>
+        </set>
+         where pid=#{tid}
+
+    </update>
+<!--    update  t_wish set wish_state =#{wish_state} where pid=#{id}-->
+    <update id="upXybShstatu" parameterType="map">
+        update  t_wish
+        <set>
+
+            <if test="sort !=null and sort!=''"  >
+                sort=#{sort},
+            </if>
+            <if test="wish_audit_remark !=null and wish_audit_remark!=''"  >
+            wish_audit_remark=#{wish_audit_remark},
+        </if>
+            <if test="wish_audit_state!=null and wish_audit_state!=''">
+                wish_audit_state=#{wish_audit_state},
+            </if>
+            <if test="wish_state !=null and wish_state!=''"  >
+                wish_state=#{wish_state},
+            </if></set>
+        where pid=#{id}
+    </update>
+<!--    通过心愿id获取到附件地址-->
+    <select id="geturl" parameterType="map" resultType="map">
+        select url,name from t_wish_file where wishid=#{tid} and del='0'
+    </select>
+<!--    当认领审核不通过时，将实现表与其对应的wish断开-->
+    <update id="updnull" parameterType="map">
+        update  t_wish_claimant set wishid=null where pid=#{tid}
+    </update>
+    <update id="updateSxb" parameterType="map">
+        update t_wish_claimant set del='1'
+        where wishid = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jiading.modules.xcx.dao.XcxDao">
+
+
+    <select id="getWishList" resultType="map">
+        select
+        pid,
+        wishusername,
+        wishuserid,
+        adder,
+        money,
+        wish_time,
+        wish_content,
+        wish_audit_state,
+        wish_audit_remark,
+        wish_auditid,
+        wish_state,
+        operatorid,
+        add_time,
+        update_time,
+        (select portrait from t_user where  pid = wishuserid)as userIcon
+        from t_wish
+        where wish_audit_state =1 and wish_state=0 and del=0
+        order by sort asc, add_time desc
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+
+    <select id="getWishCount" resultType="int">
+        select
+        count(*)
+        from t_wish
+        where wish_audit_state =1 and wish_state=0 and del=0
+    </select>
+
+
+
+
+
+    <select id="getWishDetail" resultType="map">
+        select
+        pid,
+        wishusername,
+        wishuserid,
+        adder,
+        DATE_FORMAT(wish_time ,'%Y-%m-%d %H:%i:%S') as wish_time,
+        wish_content,
+        wish_audit_state,
+        wish_audit_remark,
+        wish_auditid,
+        wish_state,
+        operatorid,
+        add_time,
+        update_time,
+        money
+        from t_wish
+        where pid=#{pid}
+    </select>
+
+
+    <insert id="realizationWish" useGeneratedKeys="true" keyProperty="pid">
+        insert into t_wish_claimant(
+        wishid,
+        claimant,
+        claimantid,
+        realize_time,
+        expressage,
+        claimant_audit_remark,
+        add_time)
+        values(
+        #{wishid},
+        #{claimant},
+        #{claimantid},
+        #{realize_time},
+        #{expressage},
+        #{claimant_audit_remark},
+        now()
+        )
+    </insert>
+
+    <insert id="addWish" useGeneratedKeys="true" keyProperty="pid">
+        insert into t_wish(
+        wishusername,
+        wishuserid,
+        wish_content,
+        adder,
+        wish_time,
+        wish_audit_remark,
+        add_time,
+        money
+        )
+        values(
+        #{wishusername},
+        #{wishuserid},
+        #{wish_content},
+        #{adder},
+        now(),
+        #{wish_audit_remark},
+        now(),
+        #{money}
+        )
+    </insert>
+
+    <insert id="addFile">
+        insert into t_wish_file(
+        wishid,
+        name,
+        url,
+        add_time
+        )
+        values
+        (
+        #{wishid},
+        #{name},
+        #{url},
+        now()
+        )
+
+
+    </insert>
+
+
+    <insert id="addUser" useGeneratedKeys="true" keyProperty="pid">
+        insert into t_user(name,nick,portrait,phone,account,password,openid,type,add_time)
+        values(
+        #{name},
+        #{nick},
+        #{portrait},
+        #{phone},
+        #{account},
+        #{password},
+        #{openid},
+        1,
+        now()
+        )
+    </insert>
+
+</mapper>

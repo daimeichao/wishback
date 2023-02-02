@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jiading.modules.xcx.dao.JbrfcDao">
+
+    <select id="getJbrList" parameterType="map" resultType="map">
+        select a.tx,b.vt cg,a.pid,a.xm,c.zwmc zw,ifnull(a.dw,'暂无部门信息') dw,a.lzcs,ifnull(a.tc,'无') tc,a.hdjx,ifnull(a.csly,'无') csly,ifnull(a.scyfkt,'无') scyfkt,ifnull(a.zycj,'无') zycj from t_user a
+        left join t_dzd b on a.cgid = b.pid
+        left join t_rylb c on a.rylbid = c.pid
+        where a.sczk = 0
+        <if test="xm != null and xm != null">
+            and  a.xm like concat('%',#{xm},'%')
+        </if>
+        ORDER BY a.tjsj DESC
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+
+    <select id="getJbrListCount" parameterType="map" resultType="int">
+        select count(*) count from t_user a
+        left join t_dzd b on a.cgid = b.pid
+        left join t_rylb c on a.rylbid = c.pid
+        where a.sczk = 0
+    </select>
+
+    <select id="getJbjlList" parameterType="map" resultType="map">
+        select b.xmmc,DATE_FORMAT(a.jbrq,'%Y-%m-%d') jbrq from t_user_jieb a
+        left join t_xm b on a.xmid = b.pid
+        where a.yhid = #{yhid} and a.sczk = '0' and b.sczk = '0'
+    </select>
+</mapper>

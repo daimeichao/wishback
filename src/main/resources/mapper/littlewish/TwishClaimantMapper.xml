@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiading.modules.littlewish.mapper.TwishClaimantMapper">
+
+    <select id="getmywishClaimant" resultType="com.jiading.modules.littlewish.domain.wishClaimant">
+        SELECT t_wish.pid,
+               t_wish.wishusername,
+               t_wish.wish_content,
+               t_wish.adder,
+               t_wish.wish_time,
+               t_wish.wish_audit_remark,
+               t_wish_claimant.claimant,
+               t_wish_claimant.realize_time,
+               t_wish_claimant.claimantid,
+               t_wish_claimant.expressage,
+               t_wish_claimant.claimant_audit_state,
+               t_wish_file.url
+        FROM t_wish,
+             t_wish_claimant,
+             t_wish_file
+        WHERE t_wish.del = 0
+          AND t_wish_claimant.claimantid = #{pid}
+          and t_wish.pid=t_wish_claimant.wishid
+          AND t_wish_file.wishid = (SELECT pid
+                                    FROM t_wish_claimant
+                                    where claimantid = #{pid})
+    </select>
+    <select id="myfulfilllist" resultType="com.jiading.modules.littlewish.domain.wishClaimant">
+        SELECT
+            t_wish.pid,
+            t_wish.wishusername,
+            t_wish.wish_content,
+            t_wish.adder,
+            t_wish.wish_time,
+            t_wish.wish_audit_remark,
+            t_wish_claimant.claimant,
+            t_wish_claimant.realize_time,
+            t_wish_claimant.claimantid,
+            t_wish_claimant.expressage,
+            t_wish_claimant.claimant_audit_state
+        FROM
+            t_wish,
+            t_wish_claimant
+        WHERE
+            t_wish.del = 0
+          AND t_wish_claimant.claimantid = #{pid}
+          AND t_wish.pid = t_wish_claimant.wishid
+        ORDER BY t_wish_claimant.realize_time desc
+    </select>
+</mapper>

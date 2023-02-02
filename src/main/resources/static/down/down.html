@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html lang="UTF-8">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+   
+    <script>
+		
+    </script>
+	<style>
+		*{margin: 0;padding: 0;}
+		html,body{height: 100%;}
+	</style>
+    <title></title>
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<script language="javascript" type="text/javascript">
+        var jflowUrl='https://appzb.fjcpc.edu.cn/jflow-web';
+        $(function(){
+            setInterval(function(){
+                $.post(jflowUrl + "/lcmmss/getSfazcj" , {}, function (res) {
+                    console.log(res)
+                    var sfazcj=res.th;
+                    console.log(sfazcj)
+                    if(sfazcj === '' || sfazcj === null || sfazcj === undefined){
+                        // location.replace(config.apiUrl+'/down/down.html')
+                    }else{
+                        window.close();
+                    }
+                },"json").error(function (xhr, status, info) {
+					console.log(status)
+                    console.log("请联系管理员！")
+				});
+            },5000)//每五秒查看一次weboffice是否已经打开，如已经打开则关闭当前窗口。
+        });
+	</script>
+</head>
+
+<body style="padding:0 2vw">
+    <div style="text-align: center;font-size: 2vw;padding: 2vw 0;border-bottom: 1px solid #ccc">
+		<p>不能在线预览文档？请阅读本说明</p>
+		<p style="font-size: 1vw;">（若已打开文档，请忽略此说明）</p>
+	</div>
+	
+	<p>
+		<p style="font-size: 1.2vw;text-indent: 2.4vw;padding: 1vw 0;color: #44f">
+			由于在线办公需要在线编辑Word文档，用户需要安装<a style="cursor: pointer;color: #f00" href="./WebOffice.exe">Word插件</a>，关于插件说明如下：
+		</p>
+		<!--<p style="font-size: 1.2vw;text-indent: 2.4vw;padding: 1vw 0">-->
+			<!--本插件支持Office2003，Office2007，Office2010，Office2013, Office2016等非Home版、非Student版的办公软件（也不要用所谓的精简版或绿色版），支持Office的32位和64位，必须是完全安装的版本，Ghost版系统自带Office的话，需要卸载重装Office。支持Wps；支持永中Office。客户端电脑有Office、Wps或永中Office之一。建议安装Office2010以上或Wps2016以上版本后执行本操作。-->
+		<!--</p>-->
+		<!--<p style="font-size: 1.2vw;text-indent: 2.4vw;padding: 1vw 0">-->
+			<!--本插件支持IE5.5及以上版本（包括IE6\7\8\9\10\11）及最新的IE浏览器。其它非IE浏览器均支持最新版本，例如支持火狐、搜狗、遨游、Chrome或Edge等等，实现跨所有浏览器。-->
+		<!--</p>-->
+		<p style="font-size: 1.2vw;text-indent: 2.4vw;padding: 1vw 0">
+			第一次使用请先<a style="cursor: pointer;color: #f00" href="./WebOffice.exe">下载Word插件</a>，下载完成后打开WebOffice.exe。然后选择默认文件夹，安装中请若出现安装证书请求框，请点击“是”。
+		</p>
+		<p style="text-align: center">
+			<img src="pic11.png" style="width: 30%"/>
+			<img src="pic2.png" style="width: 20%"/>
+		</p>
+		<p style="font-size: 1.2vw;text-indent: 2.4vw;padding: 1vw 0">
+			插件安装后预览文件时会出现下列提示框，请点击打开按钮。
+		</p>
+		<p style="text-align: center">
+			<img src="pic3.png" style="width: 30%"/>
+		</p>
+		<p style="font-size: 1.2vw;text-indent: 2.4vw;padding: 1vw 0">
+			注意，若使用期间不慎将插件删除，重新下载安装即可。
+		</p>
+		<p style="font-size: 1.2vw;text-indent: 2.4vw;padding: 2vw 0;color: #f33;text-align: right;">
+			<a style="cursor: pointer;color: #f00" href="./WebOffice.exe">插件下载地址</a>
+		</p>
+		
+	</p>
+</body>
+
+</html>
