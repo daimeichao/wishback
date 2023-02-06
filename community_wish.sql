@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : ntf
+ Source Server         : daimeichao
  Source Server Type    : MySQL
- Source Server Version : 80025
- Source Host           : 124.71.47.239:3306
- Source Schema         : community_wish
+ Source Server Version : 80031
+ Source Host           : localhost:3306
+ Source Schema         : wish
 
  Target Server Type    : MySQL
- Target Server Version : 80025
+ Target Server Version : 80031
  File Encoding         : 65001
 
- Date: 01/02/2023 15:13:45
+ Date: 05/02/2023 21:32:18
 */
 
 SET NAMES utf8mb4;
@@ -28,7 +28,7 @@ CREATE TABLE `t_banner`  (
   `link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '链接地址',
   `type` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '类型   0 文本内容 1链接',
   `del` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '删除状况 0未删除 1已删除',
-  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '添加时间',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '添加时间',
   PRIMARY KEY (`pid`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'banner表' ROW_FORMAT = Dynamic;
 
@@ -80,11 +80,15 @@ DROP TABLE IF EXISTS `t_log`;
 CREATE TABLE `t_log`  (
   `pid` int(0) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '操作内容',
-  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '操作时间',
   `userid` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '操作人id',
   `ip` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '操作人ip',
   PRIMARY KEY (`pid`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '日志表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of t_log
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for t_menu
@@ -98,7 +102,7 @@ CREATE TABLE `t_menu`  (
   `desc` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '图标',
   `sort` int(0) NULL DEFAULT 0 COMMENT '排序',
   `del` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '删除 1删除 0保留',
-  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '新增时间',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '新增时间',
   PRIMARY KEY (`pid`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
 
@@ -107,6 +111,8 @@ CREATE TABLE `t_menu`  (
 -- ----------------------------
 INSERT INTO `t_menu` VALUES ('fbxy', '发布心愿', '/xygl/fbxy', 'xygl', 'el-icon-s-promotion', 0, '0', '2022-10-25 14:42:14');
 INSERT INTO `t_menu` VALUES ('fbxysh', '发布心愿审核', '/xygl/fbxysh', 'xygl', 'el-icon-position', 0, '0', '2022-10-25 14:44:43');
+INSERT INTO `t_menu` VALUES ('jfgl', '积分管理', '/jfgl', 'x1', 'el-icon-user-solid', 0, '0', '2023-02-05 21:17:38');
+INSERT INTO `t_menu` VALUES ('jflist', '积分列表', '/jfgl/jflist', 'jfgl', 'el-icon-user-solid', 0, '0', '2023-02-05 21:18:04');
 INSERT INTO `t_menu` VALUES ('jsgl', '角色管理', '/xtgl/jsgl', 'xtgl', 'el-icon-s-check', 0, '0', '2022-10-25 11:43:40');
 INSERT INTO `t_menu` VALUES ('lbtgl', 'banner管理', '/xtgl/lbtgl', 'xtgl', 'el-icon-picture-outline', 0, '0', '2022-10-25 11:45:44');
 INSERT INTO `t_menu` VALUES ('sxxy', '实现心愿', '/xygl/sxxy', 'xygl', 'el-icon-s-opportunity', 0, '1', '2022-10-25 14:48:19');
@@ -119,6 +125,9 @@ INSERT INTO `t_menu` VALUES ('xylist', '心愿列表', '/xygl/xylist', 'xygl', '
 INSERT INTO `t_menu` VALUES ('yhgl', '系统用户管理', '/xtgl/yhgl', 'xtgl', 'el-icon-s-custom', 0, '0', '2022-08-25 09:40:13');
 INSERT INTO `t_menu` VALUES ('yhglm', '用户管理', '/yhglm', 'x1', 'el-icon-user', 2, '0', '2022-10-25 11:44:49');
 INSERT INTO `t_menu` VALUES ('yhlb', '客户列表', '/yhglm/yhlb', 'yhglm', 'el-icon-user-solid', 0, '0', '2022-10-25 11:46:38');
+INSERT INTO `t_menu` VALUES ('zyzgl', '志愿者管理', '/zyzgl', 'x1', 'el-icon-s-custom', 0, '0', '2023-02-05 21:18:58');
+INSERT INTO `t_menu` VALUES ('zyzlist', '志愿者列表', '/zyzgl/zyzlist', 'zyzgl', 'el-icon-user-solid', 0, '0', '2023-02-05 21:19:33');
+INSERT INTO `t_menu` VALUES ('zyzsh', '志愿者审核', '/zyzgl/zyzsh', 'zyzgl', 'el-icon-user-solid', 0, '0', '2023-02-05 21:20:12');
 
 -- ----------------------------
 -- Table structure for t_role
@@ -128,7 +137,7 @@ CREATE TABLE `t_role`  (
   `pid` int(0) NOT NULL AUTO_INCREMENT COMMENT '角色表ID',
   `rolename` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '角色名称',
   `remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '角色备注',
-  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '新增时间',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '新增时间',
   `del` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0' COMMENT '删除状况  0：未删除  1：已删除',
   PRIMARY KEY (`pid`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色表' ROW_FORMAT = Dynamic;
@@ -176,6 +185,9 @@ INSERT INTO `t_rolemenu` VALUES (2, 'sxxysh');
 INSERT INTO `t_rolemenu` VALUES (2, 'xylist');
 INSERT INTO `t_rolemenu` VALUES (2, 'wylb');
 INSERT INTO `t_rolemenu` VALUES (1, 'wylb');
+INSERT INTO `t_rolemenu` VALUES (1, 'zyzlist');
+INSERT INTO `t_rolemenu` VALUES (1, 'zyzsh');
+INSERT INTO `t_rolemenu` VALUES (1, 'jflist');
 
 -- ----------------------------
 -- Table structure for t_user
@@ -191,7 +203,7 @@ CREATE TABLE `t_user`  (
   `password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '密码',
   `openid` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT 'openid',
   `type` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '用户类型 1：小程序用户 2：系统用户',
-  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '添加时间',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '添加时间',
   `jyzk` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '禁用状况 0启用 1禁用',
   `del` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '删除状况 0未删除 1已删除',
   `yzm` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '验证码',
@@ -242,7 +254,7 @@ DROP TABLE IF EXISTS `t_user_role`;
 CREATE TABLE `t_user_role`  (
   `roleid` int(0) NOT NULL COMMENT '角色id',
   `userid` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '用户id',
-  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '新增时间',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '新增时间',
   PRIMARY KEY (`roleid`, `userid`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色用户关系表' ROW_FORMAT = Compact;
 
@@ -269,7 +281,7 @@ CREATE TABLE `t_wish`  (
   `wish_auditid` int(0) NULL DEFAULT NULL COMMENT '心愿审核人id',
   `wish_state` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '心愿状态 0：待认领 1：已认领 2：已完成',
   `operatorid` int(0) NULL DEFAULT NULL COMMENT '操作人id',
-  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '添加时间',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
   `del` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '是否删除 0未删除 1已删除',
   `sort` int(0) NULL DEFAULT NULL COMMENT '排序',
@@ -326,7 +338,7 @@ CREATE TABLE `t_wish_claimant`  (
   `claimant_audit_remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '认领审核备注',
   `claimant_auditid` int(0) NULL DEFAULT NULL COMMENT '认领审核人id',
   `operatorid` int(0) NULL DEFAULT NULL COMMENT '操作人id',
-  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '添加时间',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
   `del` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '是否删除 0未删除 1已删除',
   PRIMARY KEY (`pid`) USING BTREE,
@@ -360,14 +372,14 @@ CREATE TABLE `t_wish_file`  (
   `wishid` int(0) NULL DEFAULT NULL COMMENT '心愿实现表id',
   `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '附件名称',
   `url` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '附件地址',
-  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '添加时间',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
   `del` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '是否删除 0未删除 1已删除',
   `type` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '附件类型',
   PRIMARY KEY (`pid`) USING BTREE,
   INDEX `index_fjb_del`(`del`) USING BTREE,
   INDEX `index_fjb_wishid`(`wishid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 214 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '心愿附件表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 215 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '心愿附件表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_wish_file
