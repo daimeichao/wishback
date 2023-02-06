@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiading.modules.back.mapper.ZyzMapper">
+<!--    志愿者审核列表-->
+    <select id="shlb" resultType="map" parameterType="map">
+        select a.pid as zid,b.pid as uid,a.zyzid,a.sq_time,a.reason,a.zyz_audit_state,
+        a.zyz_audit_remark,  a.zyz_auditid, a.operatorid,a.add_time, a.update_time,a.del,b.name
+        from t_zyz a left  join t_user b on b.pid =a.zyzid
+        where a.del = '0' and b.del='0'
+        <if test="name != null and name != '' ">
+            and b.name LIKE CONCAT('%',#{name},'%')
+        </if>
+        <if test="zyz_audit_state != null and zyz_audit_state != '' ">
+            and zyz_audit_state LIKE CONCAT('%',#{zyz_audit_state},'%')
+        </if>
+        ORDER BY a.add_time desc
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+    <select id="shcount" resultType="java.lang.Integer">
+        select count(*)
+        from t_zyz a left  join t_user b on b.pid =a.zyzid
+        where a.del = '0' and b.del='0'
+        <if test="name != null and name != '' ">
+            and b.name LIKE CONCAT('%',#{name},'%')
+        </if>
+        <if test="zyz_audit_state != null and zyz_audit_state != '' ">
+            and zyz_audit_state LIKE CONCAT('%',#{zyz_audit_state},'%')
+        </if>
+        ORDER BY a.add_time desc
+    </select>
+    <!--    志愿者审核列表-->
+    <select id="zyzlb" resultType="map" parameterType="map">
+        select * from t_zyz where zyz_audit_state='1' and del='0'
+        <if test="zyzname != null and zyzname != '' ">
+            and zyzname LIKE CONCAT('%',#{zyzname},'%')
+        </if>
+        ORDER BY add_time desc
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+    <select id="zyzcount" resultType="java.lang.Integer">
+        select count(*)
+        select *from t_zyz
+        where zyz_audit_state='1' and del='0'
+        <if test="zyzname != null and zyzname != '' ">
+            and zyzname LIKE CONCAT('%',#{zyzname},'%')
+        </if>
+        ORDER BY add_time desc
+    </select>
+    <update id="delshById" parameterType="map">
+        update t_zyz set del='1' where pid=#{pid}
+    </update>
+    <select id="getdetail" parameterType="map" resultType="map">
+        select  * from t_zyz where  pid=#{pid}
+    </select>
+    <update id="shById" parameterType="map">
+        update t_zyz set
+        zyz_audit_state=#{zyz_audit_state}, zyz_auditid=#{zyz_auditid},update_time=now(),operatorid=#{zyz_auditid},
+        <if test="zyz_audit_remark !=null and zyz_audit_remark!=''">
+            zyz_audit_remark=#{zyz_audit_remark}
+        </if>
+        where pid=#{jid}
+    </update>
+</mapper>
