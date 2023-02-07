@@ -140,11 +140,6 @@ claimant_auditid,operatorid ,add_time ,update_time
          add_time = #{add_time},update_time=#{update_time}
         where pid = #{tid}
     </update>
-    <insert id="insertWish">
-        insert into t_wish_claimant(   claimant, expressage, claimantid, realize_time, wish_audit_state,claimant_audit_remark,claimant_auditid, claimant_audit_state, operatorid, add_time, update_time,)
-        values(#{ claimant}, #{expressage}, #{claimantid}, #{realize_time}, #{wish_audit_state}, #{claimant_audit_remark}, #{claimant_auditid}, #{claimant_audit_state},
-               #{operatorid}, #{add_time},#{update_time})
-    </insert>
     <select id="getdetail" parameterType="map" resultType="map">
     select a.pid as id, b.pid as tid,a.wishusername,a. wishuserid,a.wish_content, a.adder, a.wish_time, a.wish_audit_state,a.wish_audit_remark,
     a.wish_auditid, a.wish_state,a.operatorid ,a.add_time as fbat , a.update_time as fbut,a.sort,a.price,
@@ -155,7 +150,6 @@ claimant_auditid,operatorid ,add_time ,update_time
     on c.wishid=b.pid and c.del='0'
     where b.pid=#{id}
     </select>
-
     <update id="upShstatu" parameterType="map" >
         update t_wish_claimant
         <set>
@@ -196,12 +190,8 @@ claimant_auditid,operatorid ,add_time ,update_time
     <select id="geturl" parameterType="map" resultType="map">
         select url,name from t_wish_file where wishid=#{tid} and del='0'
     </select>
-<!--    当认领审核不通过时，将实现表与其对应的wish断开-->
-    <update id="updnull" parameterType="map">
-        update  t_wish_claimant set wishid=null where pid=#{tid}
-    </update>
-    <update id="updateSxb" parameterType="map">
-        update t_wish_claimant set del='1'
-        where wishid = #{id}
+    <update id="upddrl" parameterType="map">
+        update t_wish set wish_state='0'
+        where pid = #{id}
     </update>
 </mapper>

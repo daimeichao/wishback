@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : daimeichao
+ Source Server         : localhost_3306
  Source Server Type    : MySQL
- Source Server Version : 80031
+ Source Server Version : 50721
  Source Host           : localhost:3306
- Source Schema         : wish
+ Source Schema         : communitity_wish
 
  Target Server Type    : MySQL
- Target Server Version : 80031
+ Target Server Version : 50721
  File Encoding         : 65001
 
- Date: 05/02/2023 21:32:18
+ Date: 07/02/2023 18:04:21
 */
 
 SET NAMES utf8mb4;
@@ -22,13 +22,13 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `t_banner`;
 CREATE TABLE `t_banner`  (
-  `pid` int(0) NOT NULL AUTO_INCREMENT COMMENT '表ID',
+  `pid` int(11) NOT NULL AUTO_INCREMENT COMMENT '表ID',
   `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '内容',
   `url` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '封面地址',
   `link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '链接地址',
   `type` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '类型   0 文本内容 1链接',
   `del` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '删除状况 0未删除 1已删除',
-  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '添加时间',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '添加时间',
   PRIMARY KEY (`pid`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'banner表' ROW_FORMAT = Dynamic;
 
@@ -74,21 +74,39 @@ CREATE TABLE `t_code`  (
 INSERT INTO `t_code` VALUES ('00000352');
 
 -- ----------------------------
+-- Table structure for t_jf
+-- ----------------------------
+DROP TABLE IF EXISTS `t_jf`;
+CREATE TABLE `t_jf`  (
+  `pid` int(11) NOT NULL AUTO_INCREMENT COMMENT '表ID',
+  `userid` int(11) NULL DEFAULT NULL COMMENT '用户id',
+  `change` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '积分加减 0加 1减',
+  `remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '积分变化原因',
+  `score` int(11) NULL DEFAULT NULL COMMENT '积分数量',
+  `jf_audit_state` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '积分审核状态 0：待审核 1：审核通过 2：审核不通过',
+  `jf_audit_remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '审核备注',
+  `jf_auditid` int(11) NULL DEFAULT NULL COMMENT '审核人id',
+  `operatorid` int(11) NULL DEFAULT NULL COMMENT '操作人id',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
+  `del` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '是否删除 0未删除 1已删除',
+  `changenum` int(11) NULL DEFAULT NULL COMMENT '变化积分数量',
+  PRIMARY KEY (`pid`) USING BTREE,
+  INDEX `index_fjb_del`(`del`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 222 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '积分表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for t_log
 -- ----------------------------
 DROP TABLE IF EXISTS `t_log`;
 CREATE TABLE `t_log`  (
-  `pid` int(0) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `pid` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '操作内容',
-  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '操作时间',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
   `userid` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '操作人id',
   `ip` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '操作人ip',
   PRIMARY KEY (`pid`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '日志表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of t_log
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for t_menu
@@ -100,9 +118,9 @@ CREATE TABLE `t_menu`  (
   `link` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '菜单路径',
   `parent` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '菜单父类ID',
   `desc` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '图标',
-  `sort` int(0) NULL DEFAULT 0 COMMENT '排序',
+  `sort` int(11) NULL DEFAULT 0 COMMENT '排序',
   `del` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '删除 1删除 0保留',
-  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '新增时间',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '新增时间',
   PRIMARY KEY (`pid`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
 
@@ -111,10 +129,12 @@ CREATE TABLE `t_menu`  (
 -- ----------------------------
 INSERT INTO `t_menu` VALUES ('fbxy', '发布心愿', '/xygl/fbxy', 'xygl', 'el-icon-s-promotion', 0, '0', '2022-10-25 14:42:14');
 INSERT INTO `t_menu` VALUES ('fbxysh', '发布心愿审核', '/xygl/fbxysh', 'xygl', 'el-icon-position', 0, '0', '2022-10-25 14:44:43');
+INSERT INTO `t_menu` VALUES ('goods', '商品', '/goods', 'x1', 'el-icon-user-solid', 0, '0', '2023-02-07 16:55:30');
 INSERT INTO `t_menu` VALUES ('jfgl', '积分管理', '/jfgl', 'x1', 'el-icon-user-solid', 0, '0', '2023-02-05 21:17:38');
 INSERT INTO `t_menu` VALUES ('jflist', '积分列表', '/jfgl/jflist', 'jfgl', 'el-icon-user-solid', 0, '0', '2023-02-05 21:18:04');
 INSERT INTO `t_menu` VALUES ('jsgl', '角色管理', '/xtgl/jsgl', 'xtgl', 'el-icon-s-check', 0, '0', '2022-10-25 11:43:40');
 INSERT INTO `t_menu` VALUES ('lbtgl', 'banner管理', '/xtgl/lbtgl', 'xtgl', 'el-icon-picture-outline', 0, '0', '2022-10-25 11:45:44');
+INSERT INTO `t_menu` VALUES ('spgl', '商品列表', '/goods/sqgl', 'goods', 'el-icon-user-solid', 0, '0', '2023-02-07 16:56:04');
 INSERT INTO `t_menu` VALUES ('sxxy', '实现心愿', '/xygl/sxxy', 'xygl', 'el-icon-s-opportunity', 0, '1', '2022-10-25 14:48:19');
 INSERT INTO `t_menu` VALUES ('sxxysh', '实现心愿审核', '/xygl/sxxysh', 'xygl', 'el-icon-s-opportunity', 0, '0', '2022-10-25 14:46:58');
 INSERT INTO `t_menu` VALUES ('wylb', '完愿列表', '/xygl/wylb', 'xygl', 'el-icon-s-order', 0, '0', '2022-11-05 23:07:37');
@@ -134,10 +154,10 @@ INSERT INTO `t_menu` VALUES ('zyzsh', '志愿者审核', '/zyzgl/zyzsh', 'zyzgl'
 -- ----------------------------
 DROP TABLE IF EXISTS `t_role`;
 CREATE TABLE `t_role`  (
-  `pid` int(0) NOT NULL AUTO_INCREMENT COMMENT '角色表ID',
+  `pid` int(11) NOT NULL AUTO_INCREMENT COMMENT '角色表ID',
   `rolename` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '角色名称',
   `remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '角色备注',
-  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '新增时间',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '新增时间',
   `del` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0' COMMENT '删除状况  0：未删除  1：已删除',
   PRIMARY KEY (`pid`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色表' ROW_FORMAT = Dynamic;
@@ -158,7 +178,7 @@ INSERT INTO `t_role` VALUES (11, '请问', '111', '2022-10-31 19:25:07', '1');
 -- ----------------------------
 DROP TABLE IF EXISTS `t_rolemenu`;
 CREATE TABLE `t_rolemenu`  (
-  `roleid` int(0) NOT NULL COMMENT '角色ID',
+  `roleid` int(11) NOT NULL COMMENT '角色ID',
   `menudid` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '菜单ID'
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色菜单表' ROW_FORMAT = Dynamic;
 
@@ -188,13 +208,34 @@ INSERT INTO `t_rolemenu` VALUES (1, 'wylb');
 INSERT INTO `t_rolemenu` VALUES (1, 'zyzlist');
 INSERT INTO `t_rolemenu` VALUES (1, 'zyzsh');
 INSERT INTO `t_rolemenu` VALUES (1, 'jflist');
+INSERT INTO `t_rolemenu` VALUES (1, 'zyzgl');
+INSERT INTO `t_rolemenu` VALUES (1, 'jfgl');
+INSERT INTO `t_rolemenu` VALUES (1, 'goods');
+INSERT INTO `t_rolemenu` VALUES (1, 'spgl');
+
+-- ----------------------------
+-- Table structure for t_sp
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sp`;
+CREATE TABLE `t_sp`  (
+  `pid` int(11) NOT NULL COMMENT '商品表id',
+  `spname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商品名称',
+  `spprice` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商品价格',
+  `spxq` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商品介绍',
+  `kc` int(11) NULL DEFAULT NULL COMMENT '库存',
+  `add_time` datetime(0) NULL DEFAULT NULL COMMENT '新增时间',
+  `upd_time` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
+  `del` int(11) NULL DEFAULT NULL COMMENT '是否删除 0 否 1是',
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商品图片地址',
+  PRIMARY KEY (`pid`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_user
 -- ----------------------------
 DROP TABLE IF EXISTS `t_user`;
 CREATE TABLE `t_user`  (
-  `pid` int(0) NOT NULL AUTO_INCREMENT COMMENT '表ID',
+  `pid` int(11) NOT NULL AUTO_INCREMENT COMMENT '表ID',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '姓名',
   `nick` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信昵称',
   `portrait` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '头像',
@@ -203,7 +244,7 @@ CREATE TABLE `t_user`  (
   `password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '密码',
   `openid` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT 'openid',
   `type` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '用户类型 1：小程序用户 2：系统用户',
-  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '添加时间',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '添加时间',
   `jyzk` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '禁用状况 0启用 1禁用',
   `del` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '删除状况 0未删除 1已删除',
   `yzm` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '验证码',
@@ -216,45 +257,15 @@ CREATE TABLE `t_user`  (
 -- ----------------------------
 INSERT INTO `t_user` VALUES (1, '区委老干部局', '管理员', '', '11111', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '', '2', '2023-01-29 11:36:07', '0', '0', NULL);
 INSERT INTO `t_user` VALUES (1212, '张三', 'Zhang张三', '', '13022224444', 'zhangsan', 'e10adc3949ba59abbe56e057f20f883e', '', '2', '2022-12-07 14:51:53', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1213, '', 'child', 'https://img2.baidu.com/it/u=2833484760,1116678162&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500', NULL, '000000001', 'AFDD0B4AD2EC172C586E2150770FBF9E', '', '1', '2022-10-26 16:56:23', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1214, 'mifyaws', 'mifia', 'https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83erh3QY1l4aXyNtLicicEj7KUv3YmLmGJAhnGb6rwc9EdgZpFaibMGxiaDbJ7KiaEMbowH5TAFobRxrAcSQ/132', '', 'mifia', 'e10adc3949ba59abbe56e057f20f883e', '12', '1', '2022-12-09 15:58:10', '1', '0', NULL);
-INSERT INTO `t_user` VALUES (1222, 'child', 'child', '', NULL, '00000002', 'AFDD0B4AD2EC172C586E2150770FBF9E', '', '1', '2022-10-27 15:22:07', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1224, '', 'child', '', NULL, '00000004', 'AFDD0B4AD2EC172C586E2150770FBF9E', '', '1', '2022-10-26 17:14:18', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1227, '', 'child', '', NULL, '00000005', 'AFDD0B4AD2EC172C586E2150770FBF9E', '', '1', '2022-10-28 18:15:52', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1240, '你好漂亮', 'child', '', NULL, '00000006', 'AFDD0B4AD2EC172C586E2150770FBF9E', '', '1', '2022-10-27 17:17:49', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1279, '', '林建国', 'https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eoLssSETa01S5r1ZbyhW0alMVWZQVZfJjZ7z6598qGWV79uxHzoVHaCnHib6IoNBQNicA8HDRicmO2Kw/132', NULL, '00000014', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o4O5n5ezjPMO70881JFe5BXIWWSs', '1', '2022-12-08 10:07:27', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1329, '', 'child', '', NULL, '00000015', 'AFDD0B4AD2EC172C586E2150770FBF9E', '', '1', '2022-11-01 18:48:11', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1330, '', 'child', '', NULL, '00000016', 'AFDD0B4AD2EC172C586E2150770FBF9E', '', '1', '2022-11-01 18:50:45', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1331, '', 'child', '', NULL, '00000017', 'AFDD0B4AD2EC172C586E2150770FBF9E', '', '1', '2022-11-01 18:53:48', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1333, '书屋1', '林建国', 'https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eogHuUWMiahqhliarL3HoYP8XiciauA0T4LLjPv9Rd8HcPQvdnBBgutlTXSHGt2ic6TwDA0YYh6YdwiaokA/132', NULL, '00000019', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o_Hl45RIKN6UE2M7TDqOyQYAndVQdd', '1', '2022-12-08 10:07:31', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1336, '', 'child', '', NULL, '00000022', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o_Hl45dIedkLQtAezQ56xH5A3WHM1', '1', '2022-11-03 08:44:32', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1349, '', 'child', '', NULL, '00000024', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o_Hl45dIedkLQtAezQ56xH5A3WHM2', '1', '2022-11-03 09:01:08', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1350, '', 'child', '', NULL, '00000025', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o_Hl45dIedkLQtAezQ56xH5A3WHM3', '1', '2022-11-03 09:30:54', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1352, '', '鱼谜', 'https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLzJ98DReewRSsJv9O9NZXg6cwNc4HFJrPzulPra1yErxnX1npdLNNnrQp6xhsxxIyc3xWCUJP9SA/132', NULL, '00000026', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o_Hl45T_Y6mFC8t-nBZ39BvUM_cg', '1', '2022-11-03 09:18:54', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1353, '', 'child', '', NULL, '00000027', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o_Hl45dIedkLQtAezQ56xH5A3WHM', '1', '2022-11-03 09:31:38', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1355, '小明', '燕玲', 'https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83erh3QY1l4aXyNtLicicEj7KUv3YmLmGJAhnGb6rwc9EdgZpFaibMGxiaDbJ7KiaEMbowH5TAFobRxrAcSQ/132', NULL, '00000028', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o_Hl45WaRc-A4eyow0CyQ-or_BCY111111', '1', '2023-01-31 16:41:01', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1370, '', '冲喜大王', 'https://thirdwx.qlogo.cn/mmopen/vi_32/WgicbibiaHMsyH0LFtz0DhBUb5G6apNZKegpPlTcXBJMjzP5Ribo6dwiaczrtzKxYUoI4l5b49VbXCaaHqNdGtIzlog/132', NULL, '00000029', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o_Hl45SEmbE5itCLyZPKNPphI8W4', '1', '2022-11-04 10:31:38', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1501, '', '福星高照', 'https://thirdwx.qlogo.cn/mmopen/vi_32/FzJbZY30krCmyJuTA8mknDhrcvpvYhTYHk94cu7GLicAjOXYKHmck8biaeicy7mq5YgR3Sv7tgqbyJRQSQ0G6ObMg/132', NULL, '00000031', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o_Hl45efwRx3sia9_ljNJgeRApZo', '1', '2022-12-06 15:14:03', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1838, '', '林建国', 'https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eogHuUWMiahqhliarL3HoYP8XiciauA0T4LLjPv9Rd8HcPQvdnBBgutlTXSHGt2ic6TwDA0YYh6YdwiaokA/132', NULL, '00000342', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o_Hl45RIKN6UE2M7TDqOyQYAndVQ', '1', '2022-12-08 17:10:15', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1839, '', '超_越梦想', 'https://thirdwx.qlogo.cn/mmopen/vi_32/d8nYib6w74U1bbTpZ2kz2fGZu2LqPpc6ibYnl78k2prKIx3hdiavCudOVUSHjlTiboFiayicRrVlnGrtnWyoUeBk1uvw/132', NULL, '00000343', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o_Hl45c9C6Z5n2zZ1N1ni-_eVz2U', '1', '2022-12-08 17:27:18', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1840, '', '超_越梦想', 'https://thirdwx.qlogo.cn/mmopen/vi_32/d8nYib6w74U1bbTpZ2kz2fGZu2LqPpc6ibYnl78k2prKIx3hdiavCudOVUSHjlTiboFiayicRrVlnGrtnWyoUeBk1uvw/132', NULL, '00000344', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o_Hl45c9C6Z5n2zZ1N1ni-_eVz2U', '1', '2022-12-08 17:27:19', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1841, '', '超级大可爱', 'https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJAL1GaibtZ7nCRUyKV4XsqDP5P9eqPqYeBx5sFicvibbuz73UbPFR5XicbAad7dYzq3yI6zsB8YfuiaAw/132', NULL, '00000345', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o_Hl45Q7YPPqy0zCgnz7sLF-b5MQ', '1', '2022-12-08 17:38:33', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1851, '王五', NULL, '', '', 'wangwu', '8e25a526bd1808929fcf996efc9272b4', '', '2', '2022-12-09 15:54:35', '0', '1', NULL);
-INSERT INTO `t_user` VALUES (1852, '', 'Shinawatra', 'https://thirdwx.qlogo.cn/mmopen/vi_32/d8nYib6w74U1bbTpZ2kz2fJemctnEviaMvqMibM1Z7ceUvBzkP90UtZs0fgSGPlzBcBcwtXOVEhTiczjCoXnKib2T6Q/132', NULL, '00000346', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o_Hl45Rjmf8H68n7XWqzL2J3X2Yg', '1', '2022-12-09 16:08:08', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1857, '', '微信用户', 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132', NULL, '00000347', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o_Hl45agUL5ptvhqnQXwNzbvC2qU', '1', '2022-12-12 09:59:04', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1890, '', '林建国', 'https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eogHuUWMiahqhliarL3HoYP8XiciauA0T4LLjPv9Rd8HcPQvdnBBgutlTXSHGt2ic6TwDA0YYh6YdwiaokA/132', NULL, '00000348', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o4O5n5diqivDMNNv3sZGO7cUfuTw', '1', '2023-01-05 15:42:35', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1891, '小明', '微信用户', 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132', NULL, '00000349', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o_Hl45WaRc-A4eyow0CyQ-or_BCY', '1', '2023-01-31 16:54:08', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1892, '', '蓝色妖姬', 'https://thirdwx.qlogo.cn/mmopen/vi_32/PiajxSqBRaEJIflz8dibvpP1ysKXRhP0YicZ0t9BfI3U2oZAU79txibkChEPwcL5g8oLC9Nu1kfnch8lIfQy9Ttliaw/132', NULL, '00000350', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o_Hl45bh-3uxj14CUqRZF5SdIDsU', '1', '2023-01-31 16:56:40', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1893, '', '低调', 'https://thirdwx.qlogo.cn/mmopen/vi_32/d8nYib6w74U1bbTpZ2kz2fJzRYAolX4pBP9eE73Tb1LvrxNg4lGO95BSexq7mKbZXOTedtWyuFFkwPiaQH20NI7w/132', NULL, '00000351', 'AFDD0B4AD2EC172C586E2150770FBF9E', 'o_Hl45YdfIezbF82vgSyEaxy1lA4', '1', '2023-01-31 16:56:40', '0', '0', NULL);
 
 -- ----------------------------
 -- Table structure for t_user_role
 -- ----------------------------
 DROP TABLE IF EXISTS `t_user_role`;
 CREATE TABLE `t_user_role`  (
-  `roleid` int(0) NOT NULL COMMENT '角色id',
+  `roleid` int(11) NOT NULL COMMENT '角色id',
   `userid` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '用户id',
-  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '新增时间',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '新增时间',
   PRIMARY KEY (`roleid`, `userid`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色用户关系表' ROW_FORMAT = Compact;
 
@@ -269,22 +280,22 @@ INSERT INTO `t_user_role` VALUES (1, '1212', '2022-12-09 15:39:08');
 -- ----------------------------
 DROP TABLE IF EXISTS `t_wish`;
 CREATE TABLE `t_wish`  (
-  `pid` int(0) NOT NULL AUTO_INCREMENT COMMENT '表ID',
+  `pid` int(11) NOT NULL AUTO_INCREMENT COMMENT '表ID',
   `wishusername` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '许愿人名称',
-  `wishuserid` int(0) NULL DEFAULT NULL COMMENT '许愿人id',
+  `wishuserid` int(11) NULL DEFAULT NULL COMMENT '许愿人id',
   `wish_content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '许愿内容',
   `adder` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '许愿地点',
   `money` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '许愿金额',
   `wish_time` datetime(0) NULL DEFAULT NULL COMMENT '许愿时间',
   `wish_audit_state` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '心愿审核状态 0：待审核 1：审核通过 2：审核不通过',
   `wish_audit_remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '心愿审核备注',
-  `wish_auditid` int(0) NULL DEFAULT NULL COMMENT '心愿审核人id',
+  `wish_auditid` int(11) NULL DEFAULT NULL COMMENT '心愿审核人id',
   `wish_state` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '心愿状态 0：待认领 1：已认领 2：已完成',
-  `operatorid` int(0) NULL DEFAULT NULL COMMENT '操作人id',
-  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '添加时间',
+  `operatorid` int(11) NULL DEFAULT NULL COMMENT '操作人id',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
   `del` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '是否删除 0未删除 1已删除',
-  `sort` int(0) NULL DEFAULT NULL COMMENT '排序',
+  `sort` int(11) NULL DEFAULT NULL COMMENT '排序',
   `price` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '是否大金额（0：否 1是）',
   PRIMARY KEY (`pid`) USING BTREE,
   INDEX `index_fjb_del`(`del`) USING BTREE
@@ -328,17 +339,17 @@ INSERT INTO `t_wish` VALUES (240, '谢女士', 1857, '为增强居民对社区�
 -- ----------------------------
 DROP TABLE IF EXISTS `t_wish_claimant`;
 CREATE TABLE `t_wish_claimant`  (
-  `pid` int(0) NOT NULL AUTO_INCREMENT COMMENT '表ID',
-  `wishid` int(0) NULL DEFAULT NULL COMMENT '心愿表id',
+  `pid` int(11) NOT NULL AUTO_INCREMENT COMMENT '表ID',
+  `wishid` int(11) NULL DEFAULT NULL COMMENT '心愿表id',
   `claimant` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '认领人姓名',
-  `claimantid` int(0) NULL DEFAULT NULL COMMENT '认领人id',
+  `claimantid` int(11) NULL DEFAULT NULL COMMENT '认领人id',
   `realize_time` datetime(0) NULL DEFAULT NULL COMMENT '实现时间',
   `expressage` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '快递单号',
   `claimant_audit_state` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '认领审核状态 0：待审核 1：审核通过 2：审核不通过',
   `claimant_audit_remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '认领审核备注',
-  `claimant_auditid` int(0) NULL DEFAULT NULL COMMENT '认领审核人id',
-  `operatorid` int(0) NULL DEFAULT NULL COMMENT '操作人id',
-  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '添加时间',
+  `claimant_auditid` int(11) NULL DEFAULT NULL COMMENT '认领审核人id',
+  `operatorid` int(11) NULL DEFAULT NULL COMMENT '操作人id',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
   `del` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '是否删除 0未删除 1已删除',
   PRIMARY KEY (`pid`) USING BTREE,
@@ -368,11 +379,11 @@ INSERT INTO `t_wish_claimant` VALUES (188, 234, '市地铁集团', 10, '2022-12-
 -- ----------------------------
 DROP TABLE IF EXISTS `t_wish_file`;
 CREATE TABLE `t_wish_file`  (
-  `pid` int(0) NOT NULL AUTO_INCREMENT COMMENT '表ID',
-  `wishid` int(0) NULL DEFAULT NULL COMMENT '心愿实现表id',
+  `pid` int(11) NOT NULL AUTO_INCREMENT COMMENT '表ID',
+  `wishid` int(11) NULL DEFAULT NULL COMMENT '心愿实现表id',
   `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '附件名称',
   `url` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '附件地址',
-  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '添加时间',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
   `del` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '是否删除 0未删除 1已删除',
   `type` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '附件类型',
@@ -408,22 +419,26 @@ INSERT INTO `t_wish_file` VALUES (188, 259, '1223.png', '/upload/xy/xy1675156650
 INSERT INTO `t_wish_file` VALUES (189, 259, '1223.png', '/upload/xy/xy1675157090055ijyfr.png', '2023-01-31 17:24:57', NULL, '0', NULL);
 INSERT INTO `t_wish_file` VALUES (190, 259, '微信图片_20230130200637.jpg', '/upload/xy/xy1675157095297imync.jpg', '2023-01-31 17:24:57', NULL, '0', NULL);
 INSERT INTO `t_wish_file` VALUES (191, 214, 'm1.png', '/upload/xy/xy1675160279547mbftw.png', '2023-01-31 18:18:02', NULL, '0', NULL);
-INSERT INTO `t_wish_file` VALUES (192, 214, 'm1.png', '/upload/xy/xy1675160279547mbftw.png', '2023-01-31 18:18:02', '0000-00-00 00:00:00', '0', '');
-INSERT INTO `t_wish_file` VALUES (199, 222, '', '/upload/xy/xy1675214423041sawff.jpg', '2023-02-01 09:20:23', NULL, '0', NULL);
-INSERT INTO `t_wish_file` VALUES (200, 222, '', '/upload/xy/xy1675214423068dwrsc.jpg', '2023-02-01 09:20:23', NULL, '0', NULL);
-INSERT INTO `t_wish_file` VALUES (201, 223, '', '/upload/xy/xy1675214747930csdfr.jpg', '2023-02-01 09:25:47', NULL, '0', NULL);
-INSERT INTO `t_wish_file` VALUES (202, 223, '', '/upload/xy/xy1675214747930csdfr.jpg', '2023-02-01 09:26:50', NULL, '0', NULL);
-INSERT INTO `t_wish_file` VALUES (203, 223, '1223.png', '/upload/xy/xy1675214807506exwpm.png', '2023-02-01 09:26:50', NULL, '0', NULL);
-INSERT INTO `t_wish_file` VALUES (204, 224, '1223.png', '/upload/xy/xy1675214989870xzzew.png', '2023-02-01 09:30:04', NULL, '0', NULL);
-INSERT INTO `t_wish_file` VALUES (205, 224, '微信图片_20230130143220.jpg', '/upload/xy/xy1675214995042rcrpe.jpg', '2023-02-01 09:30:04', NULL, '0', NULL);
-INSERT INTO `t_wish_file` VALUES (206, 224, '微信图片_20230130143114.jpg', '/upload/xy/xy1675215002445dczzd.jpg', '2023-02-01 09:30:04', NULL, '0', NULL);
-INSERT INTO `t_wish_file` VALUES (207, 225, '', '/upload/xy/xy1675215235644sjnci.jpg', '2023-02-01 09:33:55', NULL, '0', NULL);
-INSERT INTO `t_wish_file` VALUES (208, 226, '', '/upload/xy/xy1675217370828zwtmt.jpg', '2023-02-01 10:09:30', NULL, '0', NULL);
-INSERT INTO `t_wish_file` VALUES (209, 227, '', '/upload/xy/xy1675217436246wzmhc.jpg', '2023-02-01 10:10:36', NULL, '0', NULL);
-INSERT INTO `t_wish_file` VALUES (210, 228, '', '/upload/xy/xy1675217462929dhmdj.jpg', '2023-02-01 10:11:02', NULL, '0', NULL);
-INSERT INTO `t_wish_file` VALUES (211, 229, '', '/upload/xy/xy1675217515103itjmj.jpg', '2023-02-01 10:11:55', NULL, '1', NULL);
-INSERT INTO `t_wish_file` VALUES (212, 229, '', '/upload/xy/xy1675217515103itjmj.jpg', '2023-02-01 10:12:25', NULL, '0', NULL);
-INSERT INTO `t_wish_file` VALUES (213, 229, '1223.png', '/upload/xy/xy1675217543895ehbrr.png', '2023-02-01 10:12:25', NULL, '0', NULL);
-INSERT INTO `t_wish_file` VALUES (214, 183, '微信截图_20230201102045.png', '/upload/xy/xy1675218058302rhnsw.png', '2023-02-01 10:21:03', NULL, '0', NULL);
+
+-- ----------------------------
+-- Table structure for t_zyz
+-- ----------------------------
+DROP TABLE IF EXISTS `t_zyz`;
+CREATE TABLE `t_zyz`  (
+  `pid` int(11) NOT NULL AUTO_INCREMENT COMMENT '表ID',
+  `zyzid` int(11) NULL DEFAULT NULL COMMENT '志愿者id',
+  `zyzname` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '志愿者姓名',
+  `sq_time` datetime(0) NULL DEFAULT NULL COMMENT '申请时间',
+  `reason` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '申请原因',
+  `zyz_audit_state` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '志愿者审核状态 0：待审核 1：审核通过 2：审核不通过',
+  `zyz_audit_remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '审核备注',
+  `zyz_auditid` int(11) NULL DEFAULT NULL COMMENT '审核人id',
+  `operatorid` int(11) NULL DEFAULT NULL COMMENT '操作人id',
+  `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
+  `del` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '是否删除 0未删除 1已删除',
+  PRIMARY KEY (`pid`) USING BTREE,
+  INDEX `index_fjb_del`(`del`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 222 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '志愿者申请表' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

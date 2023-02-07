@@ -124,6 +124,8 @@ public class WishClainmantServiceImpl extends ServiceImpl<WishClainmantMapper, W
         Map outmap = new HashMap();
         try {
             wishClainmantMapper.deleteWishById(Integer.parseInt(String.valueOf( params.get("pid") )));
+//            将心愿状态改为待认领
+            wishClainmantMapper.upddrl(params);
             outmap.put("result","success");
         } catch (Exception e) {
             e.printStackTrace();

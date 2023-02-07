@@ -23,10 +23,6 @@
 pid as id, wishusername, wishuserid, wish_content, adder, wish_time, wish_audit_state,
 wish_audit_remark, wish_auditid, operatorid , add_time , update_time,sort
   </sql>
-    <!--    通过心愿id获取到附件地址-->
-    <select id="geturl" parameterType="map" resultType="map">
-        select url from t_wish_file where wishid=#{wishid}
-    </select>
     <select id="getListById" resultType="java.util.Map" parameterType="map">
         select a.pid as id,b.pid as tid, a.wishusername, a.wishuserid,a.wish_content,
         a.adder, a.wish_time, a.wish_audit_state,a.wish_audit_remark,
@@ -36,7 +32,7 @@ wish_audit_remark, wish_auditid, operatorid , add_time , update_time,sort
         b.claimant_auditid, b.operatorid ,b.add_time as sxat ,b.update_time as sxut,c.name,group_concat(c.url) as url
         from t_wish as a
         left join t_wish_claimant as b
-        on a.pid=b.wishid and b.claimant_audit_state !='2'
+        on a.pid=b.wishid and b.claimant_audit_state !='2' and b.del='0'
         left join t_wish_file as c
         on c.wishid=b.pid and c.del='0'
         where a.del='0' and a.pid=#{id}
@@ -48,7 +44,7 @@ wish_audit_remark, wish_auditid, operatorid , add_time , update_time,sort
         claimant, claimantid,date_format(realize_time,'%Y-%m-%d')realize_time,expressage, claimant_audit_state,claimant_audit_remark,b.wishid,
         claimant_auditid, b.operatorid ,b.add_time as sxat ,b.update_time as sxut
         from t_wish as a
-        left join (SELECT * from t_wish_claimant WHERE claimant_audit_state!='2') as b
+        left join (SELECT * from t_wish_claimant WHERE claimant_audit_state!='2' and del='0' ) as b
         on  a.pid=b.wishid
         where a.del='0'
         <if test="wishusername != null and wishusername != '' ">
@@ -117,14 +113,6 @@ wish_audit_remark, wish_auditid, operatorid , add_time , update_time,sort
     <update id="deleteWishById1">
         update t_wish set del = '1' where pid = #{pid}
     </update>
-<!--    根据id进行修改-->
-    <update id="updateWishById">
-        update t_wish
-        set wishusername = #{wishusername}, wishuserid = #{wishuserid}, adder = #{adder}, wish_time =now(), wish_audit_state = #{wish_audit_state},
-        wish_audit_remark = #{wish_audit_remark}, wish_auditid = #{wish_auditid}, wish_state = #{wish_state}, operatorid = #{operatorid}, add_time = #{add_time}, update_time = #{update_time},
-        sort = #{sort}
-        where pid = #{id}
-    </update>
 
     <select id="getSHList"  resultType="java.util.Map">
        select * from t_wish
@@ -137,17 +125,6 @@ wish_audit_remark, wish_auditid, operatorid , add_time , update_time,sort
             LIMIT #{pageindex},#{pagesize}
         </if>
     </select>
-<!--    修改实现附件-->
-    <update id="UpdSxfj" parameterType="map">
-        update t_wish_file
-        <set>
-            name=#{name} ,
-            url=#{tuurl}  ,
-            update_time=now(),
-
-        </set>
-        where wishid = #{tid}
-    </update>
 <!--    心愿列表修改认领状态为已认领-->
     <update id="updCliamant" parameterType="map">
         update t_wish set wish_state ='1' where pid=#{id}
@@ -155,12 +132,9 @@ wish_audit_remark, wish_auditid, operatorid , add_time , update_time,sort
 <!--    完愿列表修改认领人信息-->
     <update id="updrl" parameterType="map">
         update t_wish_claimant
-            <set>
+            set
                 claimant=#{claimant},realize_time=#{realize_time},update_time=now(),
-            <if test="expressage !=null and  expressage!=''">
-                expressage=#{expressage},
-            </if>
-            </set>
+                expressage=#{expressage}
             where wishid=#{id} and pid=#{tid}
     </update>
 <!--    心愿列表的实现按钮-->
@@ -232,9 +206,6 @@ wish_audit_remark, wish_auditid, operatorid , add_time , update_time,sort
     <select id="getdetail" parameterType="map" resultType="map">
         select * from t_wish where del='0' and pid=#{id}
     </select>
-    <select id="getifTu" parameterType="map" resultType="int">
-        select count(*) from t_wish_file where wishid=#{id} and del='0'
-    </select>
     <insert id="addTu" parameterType="map">
         insert into t_wish_file(wishid,name,url,add_time) values (#{tid},#{fjname},#{fjurl},now())
     </insert>
@@ -243,12 +214,12 @@ wish_audit_remark, wish_auditid, operatorid , add_time , update_time,sort
     </insert>
     <insert id="addfb" parameterType="map"  >
         insert into t_wish (wishusername,wishuserid,wish_time,wish_content,adder,operatorid)
-         values (#{wishusername},#{wishuserid},now(),#{wish_content},#{adder},#{operatorid})
+         values (#{wishusername},#{wishuserid},DATE_FORMAT(#{wish_time},'%Y-%m-%d %H:%i:%s'),#{wish_content},#{adder},#{operatorid})
     </insert>
-    <select id="getWishName" parameterType="map" resultType="string">
-        select name from  t_user where pid=#{wishuserid}
-    </select>
     <update id="delfj" parameterType="map">
         update t_wish_file set del='1'  where wishid=#{tid}
+    </update>
+    <update id="delsxb" parameterType="map">
+        update t_wish_claimant set del='1'  where pid=#{pid}
     </update>
 </mapper>

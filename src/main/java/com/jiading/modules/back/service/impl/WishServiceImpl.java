@@ -163,7 +163,12 @@ public class WishServiceImpl extends ServiceImpl<WishMapper, Wish> implements Wi
     public Map deleteWishById(Map<String, Object> params){
         Map outmap = new HashMap();
         try {
+            System.out.println(params+"删除参数tid 和id");
             wishMapper.deleteWishById(Integer.parseInt(String.valueOf( params.get("id") )));
+//           当对应认领信息存在时 将这条心愿的认领信息逻辑删除
+            if (params.get("pid")!=null &&params.get("pid")!="" ) {
+                wishMapper.delsxb(params);
+            }
             outmap.put("result","success");
         } catch (Exception e) {
             e.printStackTrace();

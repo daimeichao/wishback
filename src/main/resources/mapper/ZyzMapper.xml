@@ -64,4 +64,8 @@
         </if>
         where pid=#{jid}
     </update>
+    <insert id="addzyz" parameterType="map" >
+        insert  into t_zyz (zyzid, zyzname,sq_time,reason,zyz_audit_state,add_time,update_time,del )
+         values (#{userid},#{zyzname},#{sq_time},#{reason},'0',now(),now(),'0')
+    </insert>
 </mapper>

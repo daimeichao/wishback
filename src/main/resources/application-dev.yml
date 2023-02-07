@@ -1,8 +1,8 @@
 ﻿﻿file:
   path: /upload/**    #文件访问路径
   #address: /home/jbgs/upload/  #文件保存路径
-  address: D:/upload/  #文件保存路径 测试用
-  adminPath: http://127.0.0.1:8127/
+  address: C:/upload/  #文件保存路径 测试用
+  adminPath: http://127.0.0.1:8126/
 
 spring:
   jackson:
@@ -17,7 +17,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/wish?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&allowMultiQueries=true
+      url: jdbc:mysql://localhost:3306/communitity_wish?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&allowMultiQueries=true
 #      url: jdbc:mysql://124.71.47.239:3306/db_jb_test?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&allowMultiQueries=true
       username: root
       password: 123456
