@@ -11,7 +11,7 @@
  Target Server Version : 50721
  File Encoding         : 65001
 
- Date: 07/02/2023 18:04:21
+ Date: 08/02/2023 16:49:43
 */
 
 SET NAMES utf8mb4;
@@ -134,7 +134,7 @@ INSERT INTO `t_menu` VALUES ('jfgl', '积分管理', '/jfgl', 'x1', 'el-icon-use
 INSERT INTO `t_menu` VALUES ('jflist', '积分列表', '/jfgl/jflist', 'jfgl', 'el-icon-user-solid', 0, '0', '2023-02-05 21:18:04');
 INSERT INTO `t_menu` VALUES ('jsgl', '角色管理', '/xtgl/jsgl', 'xtgl', 'el-icon-s-check', 0, '0', '2022-10-25 11:43:40');
 INSERT INTO `t_menu` VALUES ('lbtgl', 'banner管理', '/xtgl/lbtgl', 'xtgl', 'el-icon-picture-outline', 0, '0', '2022-10-25 11:45:44');
-INSERT INTO `t_menu` VALUES ('spgl', '商品列表', '/goods/sqgl', 'goods', 'el-icon-user-solid', 0, '0', '2023-02-07 16:56:04');
+INSERT INTO `t_menu` VALUES ('spgl', '商品列表', '/goods/spgl', 'goods', 'el-icon-user-solid', 0, '0', '2023-02-07 16:56:04');
 INSERT INTO `t_menu` VALUES ('sxxy', '实现心愿', '/xygl/sxxy', 'xygl', 'el-icon-s-opportunity', 0, '1', '2022-10-25 14:48:19');
 INSERT INTO `t_menu` VALUES ('sxxysh', '实现心愿审核', '/xygl/sxxysh', 'xygl', 'el-icon-s-opportunity', 0, '0', '2022-10-25 14:46:58');
 INSERT INTO `t_menu` VALUES ('wylb', '完愿列表', '/xygl/wylb', 'xygl', 'el-icon-s-order', 0, '0', '2022-11-05 23:07:37');
@@ -218,7 +218,7 @@ INSERT INTO `t_rolemenu` VALUES (1, 'spgl');
 -- ----------------------------
 DROP TABLE IF EXISTS `t_sp`;
 CREATE TABLE `t_sp`  (
-  `pid` int(11) NOT NULL COMMENT '商品表id',
+  `pid` int(11) NOT NULL AUTO_INCREMENT COMMENT '商品表id',
   `spname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商品名称',
   `spprice` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商品价格',
   `spxq` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商品介绍',
@@ -228,7 +228,12 @@ CREATE TABLE `t_sp`  (
   `del` int(11) NULL DEFAULT NULL COMMENT '是否删除 0 否 1是',
   `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商品图片地址',
   PRIMARY KEY (`pid`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of t_sp
+-- ----------------------------
+INSERT INTO `t_sp` VALUES (1, '手机挂件', '2', '兑换商品', 3, '2023-02-08 09:26:45', '2023-02-08 09:26:45', 0, '/upload/xy/xy1675819489872stddr.jpg');
 
 -- ----------------------------
 -- Table structure for t_user
@@ -327,12 +332,12 @@ INSERT INTO `t_wish` VALUES (231, '是的', 10, '是的', '福建省福州市鼓
 INSERT INTO `t_wish` VALUES (232, '苍霞新城社区', 1213, '“苍霞人家”生活馆作为福州市党性教育现场教学点市级示范点，接待来访团队和个人任务量巨大，目前缺少专职讲解员和运维人员。', '苍霞人家生活馆', NULL, '2022-11-21 17:58:10', '1', '', 1, '1', 1, '2022-11-21 17:58:10', NULL, '0', 1, '0');
 INSERT INTO `t_wish` VALUES (233, '苍霞新城社区', 1, '因疫情防控工作需要，现需5名志愿者协助维护核酸点位秩序。', '苍霞新城社区', NULL, '2022-12-05 08:52:03', '1', '', 1, '2', 1, '2022-12-05 08:52:03', NULL, '0', 5, '0');
 INSERT INTO `t_wish` VALUES (234, '苍霞新城社区', 1, '因疫情防控工作需要，需3名核酸采样信息录入员，协助全民核酸采样工作。', '苍霞新城社区', NULL, '2022-12-05 08:54:08', '1', '', NULL, '2', 1, '2022-12-05 08:54:08', '2023-02-01 01:06:48', '0', 6, '0');
-INSERT INTO `t_wish` VALUES (235, '张三', 1212, '平安健康', '福州', NULL, '2022-12-08 17:07:13', '1', '', 1212, '2', 1212, '2022-12-08 17:07:13', NULL, '1', 3, '1');
-INSERT INTO `t_wish` VALUES (236, '鱼谜', 1352, '平安喜乐哈哈哈', '福州 ', '', '2022-12-08 17:14:45', '0', '', NULL, '0', NULL, '2022-12-08 17:14:08', NULL, '1', 1, '0');
-INSERT INTO `t_wish` VALUES (237, '张三', 1212, '测试', '福州', NULL, '2023-01-12 11:38:09', '1', '', 1212, '2', 1212, '2023-01-12 11:38:09', NULL, '1', 1, '0');
-INSERT INTO `t_wish` VALUES (238, '苍霞新城社区', 1, '为增强居民对社区的归属感和凝聚力，共同打造和谐、融洽的氛围，社区需多方共建，开展多元化活动。', '嘉和苑小区', NULL, '2023-01-29 10:45:35', '1', '', 1, '0', 1, '2023-01-29 10:45:35', NULL, '1', 2, '0');
-INSERT INTO `t_wish` VALUES (239, '张女士', 1, '因家庭困难，孩子上网课所需电脑无法购买，希望能够得到帮助。', '苍霞新城社区嘉和苑', '', '2023-01-29 11:10:37', '1', '', 1, '0', NULL, '2023-01-29 11:10:37', NULL, '1', 2, '0');
-INSERT INTO `t_wish` VALUES (240, '谢女士', 1857, '为增强居民对社区的归属感和凝聚力，共同打造和谐、融洽的氛围，社区需多方共建，开展多元化活动。', '苍霞新城嘉和苑小区', NULL, '2023-01-29 11:33:15', '1', '', 1, '1', 1, '2023-01-29 11:33:15', NULL, '1', 2, '0');
+INSERT INTO `t_wish` VALUES (235, '张三', 1212, '平安健康', '福州', NULL, '2022-12-08 17:07:13', '1', '', 1212, '2', 1212, '2022-12-08 17:07:13', NULL, '0', 3, '1');
+INSERT INTO `t_wish` VALUES (236, '鱼谜', 1352, '平安喜乐哈哈哈', '福州 ', '', '2022-12-08 17:14:45', '0', '', NULL, '0', NULL, '2022-12-08 17:14:08', NULL, '0', 1, '0');
+INSERT INTO `t_wish` VALUES (237, '张三', 1212, '测试', '福州', NULL, '2023-01-12 11:38:09', '1', '', 1212, '2', 1212, '2023-01-12 11:38:09', NULL, '0', 1, '0');
+INSERT INTO `t_wish` VALUES (238, '苍霞新城社区', 1, '为增强居民对社区的归属感和凝聚力，共同打造和谐、融洽的氛围，社区需多方共建，开展多元化活动。', '嘉和苑小区', NULL, '2023-01-29 10:45:35', '1', '', 1, '0', 1, '2023-01-29 10:45:35', NULL, '0', 2, '0');
+INSERT INTO `t_wish` VALUES (239, '张女士', 1, '因家庭困难，孩子上网课所需电脑无法购买，希望能够得到帮助。', '苍霞新城社区嘉和苑', '', '2023-01-29 11:10:37', '1', '', 1, '0', NULL, '2023-01-29 11:10:37', NULL, '0', 2, '0');
+INSERT INTO `t_wish` VALUES (240, '谢女士', 1857, '为增强居民对社区的归属感和凝聚力，共同打造和谐、融洽的氛围，社区需多方共建，开展多元化活动。', '苍霞新城嘉和苑小区', NULL, '2023-01-29 11:33:15', '1', '', 1, '0', 1, '2023-01-29 11:33:15', NULL, '0', 2, '0');
 
 -- ----------------------------
 -- Table structure for t_wish_claimant
@@ -437,8 +442,14 @@ CREATE TABLE `t_zyz`  (
   `add_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
   `del` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '是否删除 0未删除 1已删除',
+  `tx` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '头像',
   PRIMARY KEY (`pid`) USING BTREE,
   INDEX `index_fjb_del`(`del`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 222 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '志愿者申请表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 223 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '志愿者申请表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of t_zyz
+-- ----------------------------
+INSERT INTO `t_zyz` VALUES (222, 1, '区委老干部局', '2023-02-08 11:40:25', '地方三方', '1', '', 1212, 1212, '2023-02-08 11:40:28', '2023-02-08 14:27:50', '0', '/upload/xy/xy1675827621659zsspw.png');
 
 SET FOREIGN_KEY_CHECKS = 1;
