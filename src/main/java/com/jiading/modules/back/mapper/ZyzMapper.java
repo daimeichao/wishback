@@ -24,4 +24,6 @@ public interface ZyzMapper  extends BaseMapper<TZyz> {
     int shById(Map<String, Object> params);
 
     int addzyz(Map<String, Object> params);
+
+    int updById(Map<String, Object> params);
 }

@@ -30,13 +30,12 @@
         select  * from t_jf where  pid=#{pid}
     </select>
     <insert id="addsp" parameterType="map">
-        insert into t_sp (spname,spprice,spxq,kc,add_time,upd_time,url,del)
-        values (#{spname},#{spprice},#{spxq},#{kc},now(),now(),#{url},'0');
+        insert into t_sp (spname,spprice,spxq,kc,add_time,upd_time,url,del,operatorid)
+        values (#{spname},#{spprice},#{spxq},#{kc},now(),now(),#{url},'0',#{operatorid});
     </insert>
     <update id="updsp" parameterType="map">
         update t_sp set spname=#{spname},spprice=#{spprice},sqxp=#{spxq},kc=#{kc},
-                        upd_time=now(),url=#{url}
-        where pid=#{pid}
+                        upd_time=now(),url=#{url} where pid=#{pid}
     </update>
     <update id="delsp" parameterType="map">
         update t_sp
@@ -45,7 +44,7 @@
     </update>
     <select id="splist" parameterType="map" resultType="map">
         select  *from t_sp where del='0'
-        <if test="spname != null and spname != '' ">
+        <if test="name != null and name != '' ">
             and spname LIKE CONCAT('%',#{name},'%')
         </if>order by upd_time desc
         <if test="pageindex != null and pagesize != null">

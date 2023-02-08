@@ -15,4 +15,8 @@ public interface ZyzService extends IService<TZyz> {
     Map<String, Object> getById(Map<String, Object> params);
 
     Map<String, Object> shById(Map<String, Object> params);
+
+    Map<String, Object> updById(Map<String, Object> params);
+
+    Map<String, Object> addzyz(Map<String, Object> params);
 }

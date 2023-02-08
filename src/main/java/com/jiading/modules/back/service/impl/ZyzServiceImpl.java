@@ -117,4 +117,28 @@ public class ZyzServiceImpl extends ServiceImpl<ZyzMapper, TZyz> implements ZyzS
         }
         return outmap;
     }
+    @Override
+    public Map updById(Map<String, Object> params){
+        Map outmap = new HashMap();
+        try {
+            zyzMapper.updById(params);
+            outmap.put("result","success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            outmap.put("result","err");
+        }
+        return outmap;
+    }
+    @Override
+    public Map addzyz(Map<String, Object> params){
+        Map outmap = new HashMap();
+        try {
+            zyzMapper.addzyz(params);
+            outmap.put("result","success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            outmap.put("result", "err");
+        }
+        return outmap;
+    }
 }

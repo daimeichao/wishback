@@ -43,4 +43,15 @@ public ResultMap shById(@RequestBody Map<String, Object> params) {
     Map<String, Object> outmap =zyzService.shById(params);
     return ResultMap.ok().put("outmap", outmap);
 }
+//志愿者列表编辑
+@PostMapping("/updById")
+public ResultMap updById(@RequestBody Map<String, Object> params) {
+    Map<String, Object> outmap =zyzService.updById(params);
+    return ResultMap.ok().put("outmap", outmap);
+}
+//新增志愿者
+@PostMapping("addzyz")
+public Map<String, Object> addzyz(@RequestBody Map<String,Object> params) {
+    return zyzService.addzyz(params);
+}
 }
