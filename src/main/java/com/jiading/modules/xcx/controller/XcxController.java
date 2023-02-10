@@ -111,14 +111,6 @@ public class XcxController {
                 params.put("name",name);
                 params.put("url", "/upload/" + pathparam + "/" + filename);
                 xcxService.addFile(params);
-
-
-
-
-
-
-
-
             } catch (Exception e) {
                 e.printStackTrace();
 
