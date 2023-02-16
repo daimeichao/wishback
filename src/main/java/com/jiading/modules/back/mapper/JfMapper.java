@@ -12,6 +12,7 @@ public interface JfMapper extends BaseMapper<TJf> {
     List<Map<String, Object>> getListByMap(Map<String, Object> params);
     int getListCountByMap(Map<String, Object> params);
     int delById(Map<String, Object> params);
+    int delphb(Map<String, Object> params);
     Map getdetail(Map<String, Object> params);
 
     int addsp(Map<String, Object> params);

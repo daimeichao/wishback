@@ -48,6 +48,11 @@ public class XcxController {
         return xcxService.getWishList(params);
     }
 
+//获取积分排行榜
+@PostMapping("getphb")
+public ResultMap getphb(@RequestBody Map<String,Object> params) {
+    return xcxService.getphb(params);
+}
 
     @PostMapping("getWishDetail")
     public ResultMap getWishDetail(@RequestBody Map<String,Object> params) {

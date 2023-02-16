@@ -2,6 +2,7 @@ package com.jiading.modules.back.controller;
 
 import com.jiading.common.util.ResultMap;
 import com.jiading.modules.back.service.JfService;
+import com.jiading.modules.xcx.service.XcxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,8 @@ import java.util.Map;
 public class JfController {
     @Autowired
   private   JfService jfService;
+    @Autowired
+    private XcxService xcxService;
     @PostMapping("/jflist")
     public ResultMap getList(@RequestBody Map<String, Object> params) {
         Map<String, Object> outmap = jfService.getListByMap(params);
@@ -30,7 +33,19 @@ public class JfController {
         Map<String, Object> outmap =jfService.getById(params);
         return ResultMap.ok().put("outmap", outmap);
     }
-//    新增商品
+//    积分排行榜
+@PostMapping("getphb")
+public ResultMap getphb(@RequestBody Map<String, Object> params) {
+    Map<String, Object> outmap = jfService.getphb(params);
+    return ResultMap.ok().put("outmap", outmap);
+}
+    //    删除排行榜
+    @PostMapping("/delphb")
+    public ResultMap delphb(@RequestBody Map<String, Object> params) {
+        Map<String, Object> outmap =jfService.delphb(params);
+        return ResultMap.ok().put("outmap", outmap);
+    }
+    //    新增商品
 @PostMapping("addsp")
 public Map<String, Object> addsp(@RequestBody Map<String,Object> params) {
     return jfService.addsp(params);

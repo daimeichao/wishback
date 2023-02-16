@@ -51,6 +51,24 @@ public class XcxService {
     }
 
 
+    public ResultMap getphb(Map map){
+        Integer pageindex = Integer.parseInt(map.get("pageindex")+"");
+        Integer pagesize = Integer.parseInt(map.get("pagesize")+"");
+
+        map.put("pageindex",pageindex-1);
+
+        List<Map> wishList = xcxDao.getphb(map);
+        Integer total = xcxDao.getphbCount(map);
+        BigDecimal totalPage = new BigDecimal(total);
+        totalPage =totalPage.divide(new BigDecimal(pagesize),0,BigDecimal.ROUND_UP);
+
+        if(wishList!= null && wishList.size()>0){
+            return  ResultMap.ok().put("wishList",wishList).put("total",totalPage);
+        }else{
+            return  ResultMap.ok().put("wishList",new ArrayList<>()).put("total",0);
+        }
+
+    }
 
 
     public ResultMap getUserByOpenId(Map map){

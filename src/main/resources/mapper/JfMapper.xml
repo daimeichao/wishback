@@ -2,14 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jiading.modules.back.mapper.JfMapper">
     <select id="getListByMap" resultType="java.util.Map">
-        select a.pid as jid ,b.pid as uid,a.userid, change ,a.changenum,remark,  score,jf_audit_state
-        a.jf_audit_remark,  a.zyz_auditid,a.operatorid, a.add_time, a.update_time, a.del,b.name
+        select a.pid as jid ,b.pid as uid,a.userid, a.change ,a.changenum,a.remark,a.jf_audit_state,
+        a.jf_audit_remark, a.operatorid, a.add_time, a.update_time, a.del,b.name as name
         from t_jf a left  join t_user b on b.pid =a.userid
         where a.del = '0' and b.del='0'
         <if test="name != null and name != '' ">
             and b. name LIKE CONCAT('%',#{name},'%')
         </if>
-         ORDER BY a.score, a.add_time desc
+         ORDER BY a.add_time desc
         <if test="pageindex != null and pagesize != null">
             LIMIT #{pageindex},#{pagesize}
         </if>
@@ -21,13 +21,18 @@
         <if test="name != null and name != '' ">
             and b. name LIKE CONCAT('%',#{name},'%')
         </if>
-        ORDER BY a.score, a.add_time desc
+        ORDER BY a.add_time desc
         </select>
     <update id="delById" parameterType="map">
         update t_jf set del='1' where pid=#{pid}
     </update>
+    <update id="delphb" parameterType="map">
+        update t_jf set del='1' where userid=#{userid}
+    </update>
     <select id="getdetail" parameterType="map" resultType="map">
-        select  * from t_jf where  pid=#{pid}
+        select a.pid as jid ,b.pid as uid,a.userid, a.change ,a.jf_origin,a.changenum,a.remark,a.jf_audit_state,
+               a.jf_audit_remark, a.operatorid, a.add_time, a.update_time, a.del,b.name as name
+        from t_jf a left  join t_user b on b.pid =a.userid where  a.pid=#{pid}
     </select>
     <insert id="addsp" parameterType="map">
         insert into t_sp (spname,spprice,spxq,kc,add_time,upd_time,url,del,operatorid)

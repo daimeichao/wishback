@@ -28,7 +28,27 @@
             LIMIT #{pageindex},#{pagesize}
         </if>
     </select>
+<!--积分排行榜-->
+    <select id="getphb" resultType="map">
+        select u.name,sum(j.changenum)as zf ,j.userid ,j.pid as jid from t_jf j  left join t_user u on u.pid=j.userid where u.del='0' and j.del='0'
+        <if test="name != null and name != '' ">
+            and name LIKE CONCAT('%',#{name},'%')
+        </if>
+        group
+        by userid
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
+    <select id="getphbCount" resultType="int">
+        select
+            count(*)
+        from t_jf j  left join t_user u on u.pid=j.userid where u.del='0' and j.del='0'
 
+        <if test="name != null and name != '' ">
+            and name LIKE CONCAT('%',#{name},'%')
+        </if>
+    </select>
     <select id="getWishCount" resultType="int">
         select
         count(*)

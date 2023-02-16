@@ -55,7 +55,9 @@
         update t_zyz set del='1' where pid=#{pid}
     </update>
     <select id="getdetail" parameterType="map" resultType="map">
-        select  * from t_zyz where  pid=#{pid}
+        select a.pid as zid,b.pid as uid,a.zyzid,a.sq_time,a.reason,a.zyz_audit_state,a.zyzname,a.tx,
+               a.zyz_audit_remark,  a.zyz_auditid, a.operatorid,a.add_time, a.update_time,a.del,b.name
+        from t_zyz a left  join t_user b on b.pid =a.zyzid where  a.pid=#{pid}
     </select>
     <update id="shById" parameterType="map">
         update t_zyz <set>

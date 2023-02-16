@@ -22,8 +22,10 @@ public interface XcxDao {
 
     // 愿望列表
     List<Map> getWishList(Map map);
+//    积分排行榜
+//    List<Map> getphb(Map map);
     Integer getWishCount(Map map);
-
+    List<Map<String, Object>> getphb(Map<String, Object> params);
     // 愿望详情
     Map getWishDetail(Map map);
 
@@ -73,4 +75,5 @@ public interface XcxDao {
     Map getBannerDetail(String id);
 
 
+    int getphbCount(Map map);
 }
