@@ -76,4 +76,14 @@ public interface XcxDao {
 
 
     int getphbCount(Map map);
+
+    int buysp(Map<String, Object> map);
+
+    int dejf(Map<String, Object> map);
+
+    int updkc(Map<String, Object> map);
+
+    List<Map> getmydh(Map map);
+
+    int getdhCount(Map map);
 }

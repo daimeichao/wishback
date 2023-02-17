@@ -48,7 +48,7 @@
         where pid=#{pid}
     </update>
     <select id="splist" parameterType="map" resultType="map">
-        select  *from t_sp where del='0'
+        select  *from t_sp where del='0' and kc  <![CDATA[>=]]>1
         <if test="name != null and name != '' ">
             and spname LIKE CONCAT('%',#{name},'%')
         </if>order by upd_time desc

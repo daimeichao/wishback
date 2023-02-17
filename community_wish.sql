@@ -11,7 +11,7 @@
  Target Server Version : 50721
  File Encoding         : 65001
 
- Date: 08/02/2023 16:49:43
+ Date: 17/02/2023 17:51:57
 */
 
 SET NAMES utf8mb4;
@@ -80,9 +80,9 @@ DROP TABLE IF EXISTS `t_jf`;
 CREATE TABLE `t_jf`  (
   `pid` int(11) NOT NULL AUTO_INCREMENT COMMENT '表ID',
   `userid` int(11) NULL DEFAULT NULL COMMENT '用户id',
-  `change` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '积分加减 0加 1减',
+  `change1` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '积分加减 0加 1减',
   `remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '积分变化原因',
-  `score` int(11) NULL DEFAULT NULL COMMENT '积分数量',
+  `jf_origin` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '积分来源',
   `jf_audit_state` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '积分审核状态 0：待审核 1：审核通过 2：审核不通过',
   `jf_audit_remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '审核备注',
   `jf_auditid` int(11) NULL DEFAULT NULL COMMENT '审核人id',
@@ -93,7 +93,24 @@ CREATE TABLE `t_jf`  (
   `changenum` int(11) NULL DEFAULT NULL COMMENT '变化积分数量',
   PRIMARY KEY (`pid`) USING BTREE,
   INDEX `index_fjb_del`(`del`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 222 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '积分表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '积分表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of t_jf
+-- ----------------------------
+INSERT INTO `t_jf` VALUES (1, 1, '0', '', NULL, '0', '', NULL, NULL, '2023-02-16 11:07:35', NULL, '0', 20);
+INSERT INTO `t_jf` VALUES (2, 1, '0', '', NULL, '0', '', NULL, NULL, '2023-02-16 11:07:39', NULL, '0', 20);
+INSERT INTO `t_jf` VALUES (3, 1, '0', '', NULL, '0', '', NULL, NULL, '2023-02-16 11:07:40', NULL, '0', 20);
+INSERT INTO `t_jf` VALUES (4, 1, '0', '', NULL, '0', '', NULL, NULL, '2023-02-16 11:07:40', NULL, '0', 20);
+INSERT INTO `t_jf` VALUES (5, 1, '0', '', NULL, '0', '', NULL, NULL, '2023-02-16 11:07:41', NULL, '0', 20);
+INSERT INTO `t_jf` VALUES (6, 1, '0', '', NULL, '0', '', NULL, NULL, '2023-02-16 11:07:42', NULL, '0', 20);
+INSERT INTO `t_jf` VALUES (7, 1, '0', '', NULL, '0', '', NULL, NULL, '2023-02-16 11:07:44', NULL, '0', 20);
+INSERT INTO `t_jf` VALUES (8, 1, '0', '', NULL, '0', '', NULL, NULL, '2023-02-16 11:07:47', NULL, '0', 20);
+INSERT INTO `t_jf` VALUES (9, 1212, '0', '', NULL, '0', '', NULL, NULL, '2023-02-16 11:16:16', NULL, '0', 11);
+INSERT INTO `t_jf` VALUES (10, 1, '0', '手机关机', NULL, '0', '', NULL, NULL, '2023-02-17 15:44:55', NULL, '0', 2);
+INSERT INTO `t_jf` VALUES (11, 1, '1', '手机关机', NULL, '0', '', NULL, NULL, '2023-02-17 15:45:35', NULL, '0', 2);
+INSERT INTO `t_jf` VALUES (12, 1, '1', '手机挂件', NULL, '0', '', NULL, NULL, '2023-02-17 15:46:37', NULL, '0', 2);
+INSERT INTO `t_jf` VALUES (13, 1, '1', '手机挂件', NULL, '0', '', NULL, NULL, '2023-02-17 15:47:12', NULL, '0', 2);
 
 -- ----------------------------
 -- Table structure for t_log
@@ -132,6 +149,7 @@ INSERT INTO `t_menu` VALUES ('fbxysh', '发布心愿审核', '/xygl/fbxysh', 'xy
 INSERT INTO `t_menu` VALUES ('goods', '商品', '/goods', 'x1', 'el-icon-user-solid', 0, '0', '2023-02-07 16:55:30');
 INSERT INTO `t_menu` VALUES ('jfgl', '积分管理', '/jfgl', 'x1', 'el-icon-user-solid', 0, '0', '2023-02-05 21:17:38');
 INSERT INTO `t_menu` VALUES ('jflist', '积分列表', '/jfgl/jflist', 'jfgl', 'el-icon-user-solid', 0, '0', '2023-02-05 21:18:04');
+INSERT INTO `t_menu` VALUES ('jfphb', '积分排行榜', '/jfgl/jfphb', 'jfgl', 'el-icon-s-order', 0, '0', '2023-02-16 11:37:25');
 INSERT INTO `t_menu` VALUES ('jsgl', '角色管理', '/xtgl/jsgl', 'xtgl', 'el-icon-s-check', 0, '0', '2022-10-25 11:43:40');
 INSERT INTO `t_menu` VALUES ('lbtgl', 'banner管理', '/xtgl/lbtgl', 'xtgl', 'el-icon-picture-outline', 0, '0', '2022-10-25 11:45:44');
 INSERT INTO `t_menu` VALUES ('spgl', '商品列表', '/goods/spgl', 'goods', 'el-icon-user-solid', 0, '0', '2023-02-07 16:56:04');
@@ -212,6 +230,7 @@ INSERT INTO `t_rolemenu` VALUES (1, 'zyzgl');
 INSERT INTO `t_rolemenu` VALUES (1, 'jfgl');
 INSERT INTO `t_rolemenu` VALUES (1, 'goods');
 INSERT INTO `t_rolemenu` VALUES (1, 'spgl');
+INSERT INTO `t_rolemenu` VALUES (1, 'jfphb');
 
 -- ----------------------------
 -- Table structure for t_sp
@@ -220,7 +239,7 @@ DROP TABLE IF EXISTS `t_sp`;
 CREATE TABLE `t_sp`  (
   `pid` int(11) NOT NULL AUTO_INCREMENT COMMENT '商品表id',
   `spname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商品名称',
-  `spprice` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商品价格',
+  `spprice` int(10) NULL DEFAULT NULL COMMENT '商品价格',
   `spxq` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商品介绍',
   `kc` int(11) NULL DEFAULT NULL COMMENT '库存',
   `add_time` datetime(0) NULL DEFAULT NULL COMMENT '新增时间',
@@ -228,12 +247,15 @@ CREATE TABLE `t_sp`  (
   `del` int(11) NULL DEFAULT NULL COMMENT '是否删除 0 否 1是',
   `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商品图片地址',
   PRIMARY KEY (`pid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_sp
 -- ----------------------------
-INSERT INTO `t_sp` VALUES (1, '手机挂件', '2', '兑换商品', 3, '2023-02-08 09:26:45', '2023-02-08 09:26:45', 0, '/upload/xy/xy1675819489872stddr.jpg');
+INSERT INTO `t_sp` VALUES (1, '手机挂件', 2, '兑换商品', 1, '2023-02-08 09:26:45', '2023-02-08 09:26:45', 0, 'https://img2.baidu.com/it/u=2833484760,1116678162&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500');
+INSERT INTO `t_sp` VALUES (2, '手机挂件', 6, '兑换商品', 8, '2023-02-17 11:09:50', NULL, 0, 'https://img2.baidu.com/it/u=2833484760,1116678162&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500');
+INSERT INTO `t_sp` VALUES (3, '手机挂件', 6, '兑换商品', 8, '2023-02-17 11:09:53', NULL, 0, 'https://img2.baidu.com/it/u=2833484760,1116678162&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500');
+INSERT INTO `t_sp` VALUES (4, '手机挂件', 6, '兑换商品', 8, '2023-02-17 11:09:56', NULL, 0, 'https://img2.baidu.com/it/u=2833484760,1116678162&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500');
 
 -- ----------------------------
 -- Table structure for t_user
@@ -255,13 +277,13 @@ CREATE TABLE `t_user`  (
   `yzm` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '验证码',
   PRIMARY KEY (`pid`) USING BTREE,
   INDEX `index_user_phone`(`phone`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1894 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1213 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
-INSERT INTO `t_user` VALUES (1, '区委老干部局', '管理员', '', '11111', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '', '2', '2023-01-29 11:36:07', '0', '0', NULL);
-INSERT INTO `t_user` VALUES (1212, '张三', 'Zhang张三', '', '13022224444', 'zhangsan', 'e10adc3949ba59abbe56e057f20f883e', '', '2', '2022-12-07 14:51:53', '0', '0', NULL);
+INSERT INTO `t_user` VALUES (1, '区委老干部局', '管理员', 'https://img2.baidu.com/it/u=2833484760,1116678162&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500', '11111', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '', '2', '2023-02-17 10:13:28', '0', '0', NULL);
+INSERT INTO `t_user` VALUES (1212, '张三', 'Zhang张三', 'https://img2.baidu.com/it/u=2833484760,1116678162&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500', '13022224444', 'zhangsan', 'e10adc3949ba59abbe56e057f20f883e', '', '2', '2023-02-17 10:13:33', '0', '0', NULL);
 
 -- ----------------------------
 -- Table structure for t_user_role
@@ -304,7 +326,7 @@ CREATE TABLE `t_wish`  (
   `price` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '是否大金额（0：否 1是）',
   PRIMARY KEY (`pid`) USING BTREE,
   INDEX `index_fjb_del`(`del`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 265 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '心愿表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 242 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '心愿表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_wish
@@ -338,6 +360,7 @@ INSERT INTO `t_wish` VALUES (237, '张三', 1212, '测试', '福州', NULL, '202
 INSERT INTO `t_wish` VALUES (238, '苍霞新城社区', 1, '为增强居民对社区的归属感和凝聚力，共同打造和谐、融洽的氛围，社区需多方共建，开展多元化活动。', '嘉和苑小区', NULL, '2023-01-29 10:45:35', '1', '', 1, '0', 1, '2023-01-29 10:45:35', NULL, '0', 2, '0');
 INSERT INTO `t_wish` VALUES (239, '张女士', 1, '因家庭困难，孩子上网课所需电脑无法购买，希望能够得到帮助。', '苍霞新城社区嘉和苑', '', '2023-01-29 11:10:37', '1', '', 1, '0', NULL, '2023-01-29 11:10:37', NULL, '0', 2, '0');
 INSERT INTO `t_wish` VALUES (240, '谢女士', 1857, '为增强居民对社区的归属感和凝聚力，共同打造和谐、融洽的氛围，社区需多方共建，开展多元化活动。', '苍霞新城嘉和苑小区', NULL, '2023-01-29 11:33:15', '1', '', 1, '0', 1, '2023-01-29 11:33:15', NULL, '0', 2, '0');
+INSERT INTO `t_wish` VALUES (241, '121', NULL, '312313', '31313', '', '2023-02-17 14:54:57', '0', '', NULL, '0', NULL, '2023-02-17 14:54:57', NULL, '0', NULL, '0');
 
 -- ----------------------------
 -- Table structure for t_wish_claimant
@@ -359,7 +382,7 @@ CREATE TABLE `t_wish_claimant`  (
   `del` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '是否删除 0未删除 1已删除',
   PRIMARY KEY (`pid`) USING BTREE,
   INDEX `index_fjb_del`(`del`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 222 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '心愿实现表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 189 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '心愿实现表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_wish_claimant
@@ -395,7 +418,7 @@ CREATE TABLE `t_wish_file`  (
   PRIMARY KEY (`pid`) USING BTREE,
   INDEX `index_fjb_del`(`del`) USING BTREE,
   INDEX `index_fjb_wishid`(`wishid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 215 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '心愿附件表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 192 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '心愿附件表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_wish_file
@@ -445,11 +468,18 @@ CREATE TABLE `t_zyz`  (
   `tx` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '头像',
   PRIMARY KEY (`pid`) USING BTREE,
   INDEX `index_fjb_del`(`del`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 223 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '志愿者申请表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 230 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '志愿者申请表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_zyz
 -- ----------------------------
 INSERT INTO `t_zyz` VALUES (222, 1, '区委老干部局', '2023-02-08 11:40:25', '地方三方', '1', '', 1212, 1212, '2023-02-08 11:40:28', '2023-02-08 14:27:50', '0', '/upload/xy/xy1675827621659zsspw.png');
+INSERT INTO `t_zyz` VALUES (223, 1, '', '2023-02-10 00:00:00', '', '0', '', NULL, NULL, '2023-02-10 15:33:48', '2023-02-10 15:33:48', '0', NULL);
+INSERT INTO `t_zyz` VALUES (224, 1, '区委老干部局', '2023-02-10 00:00:00', '', '0', '', NULL, NULL, '2023-02-10 15:40:16', '2023-02-10 15:40:16', '0', 'http://tmp/1jxIe6zXbjNY9af0ae559675f16d5b679c9c45268da3.jpg');
+INSERT INTO `t_zyz` VALUES (225, 1, '区委老干部局', '2023-02-10 00:00:00', '', '0', '', NULL, NULL, '2023-02-10 15:41:20', '2023-02-10 15:41:20', '0', 'http://tmp/m9iVdlpoC0Z99af0ae559675f16d5b679c9c45268da3.jpg');
+INSERT INTO `t_zyz` VALUES (226, 1, NULL, '2023-02-17 00:00:00', '', '0', '', NULL, NULL, '2023-02-17 16:53:11', '2023-02-17 16:53:11', '0', 'http://tmp/zbdpLYPIbKySc7d170301f9b1415e29baa100e06d222.png');
+INSERT INTO `t_zyz` VALUES (227, 1, 'ddmcd', '2023-02-17 00:00:00', '', '0', '', NULL, NULL, '2023-02-17 17:02:54', '2023-02-17 17:02:54', '0', 'http://tmp/UkkUaaUCStVWba9f32733054e4289d40f3f67ca42d70.png');
+INSERT INTO `t_zyz` VALUES (228, 1, 'dmc', '2023-02-18 00:00:00', 'ddasd', '0', '', NULL, NULL, '2023-02-17 17:05:19', '2023-02-17 17:05:19', '0', 'http://tmp/QLkGCsld2sCIc7d170301f9b1415e29baa100e06d222.png');
+INSERT INTO `t_zyz` VALUES (229, 1, '都没吃', '2023-02-18 00:00:00', '1111', '0', '', NULL, NULL, '2023-02-17 17:06:31', '2023-02-17 17:06:31', '0', 'http://tmp/LPiWLbMEoy3y7b659eba1a89c0a6d3564b16afea0cdf.png');
 
 SET FOREIGN_KEY_CHECKS = 1;

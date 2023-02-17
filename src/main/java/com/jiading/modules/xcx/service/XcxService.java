@@ -2,6 +2,7 @@ package com.jiading.modules.xcx.service;
 
 import com.jiading.common.util.MD5Utils;
 import com.jiading.common.util.ResultMap;
+import com.jiading.modules.back.mapper.JfMapper;
 import com.jiading.modules.xcx.dao.XcxDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ public class XcxService {
 
     @Autowired
     private XcxDao xcxDao;
+    @Autowired
+    private JfMapper jfMapper;
 
 
     public ResultMap getBannerList(){
@@ -59,6 +62,24 @@ public class XcxService {
 
         List<Map> wishList = xcxDao.getphb(map);
         Integer total = xcxDao.getphbCount(map);
+        BigDecimal totalPage = new BigDecimal(total);
+        totalPage =totalPage.divide(new BigDecimal(pagesize),0,BigDecimal.ROUND_UP);
+
+        if(wishList!= null && wishList.size()>0){
+            return  ResultMap.ok().put("wishList",wishList).put("total",totalPage);
+        }else{
+            return  ResultMap.ok().put("wishList",new ArrayList<>()).put("total",0);
+        }
+
+    }
+
+    public ResultMap getgood(Map map){
+        Integer pageindex = Integer.parseInt(map.get("pageindex")+"");
+        Integer pagesize = Integer.parseInt(map.get("pagesize")+"");
+
+        map.put("pageindex",pageindex-1);
+        List<Map> wishList =  jfMapper.splist(map); // 返回当前页的展示列表
+        Integer total = jfMapper.spcount(map); // 计算真实数据总数
         BigDecimal totalPage = new BigDecimal(total);
         totalPage =totalPage.divide(new BigDecimal(pagesize),0,BigDecimal.ROUND_UP);
 
@@ -142,6 +163,40 @@ public class XcxService {
         Map bannerDetail = xcxDao.getBannerDetail(id);
         return ResultMap.ok().put("bannerDetail",bannerDetail);
     }
+    public ResultMap getgooddetail(Map map){
+        Map wishDetail = jfMapper.spdetail(map);
+        if(wishDetail!=null ){
+            return ResultMap.ok().put("detail",wishDetail);
+        }else{
+            return ResultMap.ok().put("detail",new HashMap<>());
+        }
 
+}
 
+    public ResultMap buysp(Map<String, Object> map) {
+//        新增积分变化数据，消费多少积分（spprice）
+        xcxDao.dejf(map);
+//        减少库存
+        xcxDao.updkc(map);
+
+        return ResultMap.ok();
+    }
+    public ResultMap getmydh(Map map){
+        Integer pageindex = Integer.parseInt(map.get("pageindex")+"");
+        Integer pagesize = Integer.parseInt(map.get("pagesize")+"");
+
+        map.put("pageindex",pageindex-1);
+
+        List<Map> wishList = xcxDao.getmydh(map);
+        Integer total = xcxDao.getdhCount(map);
+        BigDecimal totalPage = new BigDecimal(total);
+        totalPage =totalPage.divide(new BigDecimal(pagesize),0,BigDecimal.ROUND_UP);
+
+        if(wishList!= null && wishList.size()>0){
+            return  ResultMap.ok().put("wishList",wishList).put("total",totalPage);
+        }else{
+            return  ResultMap.ok().put("wishList",new ArrayList<>()).put("total",0);
+        }
+
+    }
 }

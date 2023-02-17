@@ -53,6 +53,22 @@ public class XcxController {
 public ResultMap getphb(@RequestBody Map<String,Object> params) {
     return xcxService.getphb(params);
 }
+//获取商品list
+@PostMapping("getgood")
+public ResultMap getgood(@RequestBody Map<String,Object> params) {
+    return xcxService.getgood(params);
+}
+//获取商品详情
+@PostMapping("getgooddetail")
+public ResultMap getgooddetail(@RequestBody Map<String,Object> params) {
+    return xcxService.getgooddetail(params);
+}
+//兑换商品
+@PostMapping("buysp")
+public ResultMap buysp(@RequestBody Map<String,Object> params) {
+    return xcxService.buysp(params);
+}
+
 
     @PostMapping("getWishDetail")
     public ResultMap getWishDetail(@RequestBody Map<String,Object> params) {
