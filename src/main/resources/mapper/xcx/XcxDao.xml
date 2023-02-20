@@ -164,13 +164,25 @@
     <update id="updkc" parameterType="map">
         update t_sp  set kc=#{kc} where pid=#{sppid}
     </update>
-    <select id="getmydh" resultType="map">
-        select  * from t_jf where del='0' and change1='1'and userid={#userid}
+    <select id="getmyjf" resultType="map">
+        select  * from t_jf where del='0' and change1='1'and userid=#{pid}
         <if test="pageindex != null and pagesize != null">
             LIMIT #{pageindex},#{pagesize}
         </if>
     </select>
-    <select id="getdhCount" resultType="map">
-        select count( * )from t_jf where del='0' and change1='1'and userid={#userid}
+    <select id="getdhCount" resultType="java.lang.Integer">
+        select count( * )from t_jf where del='0' and change1='1'and userid=#{pid}
+    </select>
+    <select id="zyzdetail" parameterType="map" resultType="map">
+        select u.name ,u.zyzzt ,z.zyzid,z.zyzname,DATE_FORMAT(z.sq_time ,'%Y-%m-%d ')sq_time,z. reason,z. del,z.  tx
+        from t_user u left join t_zyz z on u.pid=z.zyzid
+        where u.pid=#{pid} and z.del='0 ' and u.del='0'
+ </select>
+    <update id="upduser" parameterType="map">
+        update t_user set portrait=#{portrait},phone=#{phone},nick=#{nick},type=#{type},name=#{name}
+         where pid=#{pid}
+    </update>
+    <select id="getUserById" parameterType="map" resultType="map">
+        select * from t_user where pid=#{pid}
     </select>
 </mapper>

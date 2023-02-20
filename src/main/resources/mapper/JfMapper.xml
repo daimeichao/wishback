@@ -66,4 +66,5 @@
         </select>
     <select id="spdetail" parameterType="map" resultType="map">
         select  *from t_sp where del='0' and pid=#{pid}</select>
+
 </mapper>

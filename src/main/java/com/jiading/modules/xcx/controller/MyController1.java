@@ -14,9 +14,15 @@ public class MyController1 {
     @Autowired
     private XcxService xcxService;
 //    获取到我的商品兑换记录
-    @PostMapping("getmydh")
+    @PostMapping("getmyjf")
     public ResultMap getmydh(@RequestBody Map<String,Object> params) {
-        return xcxService.getmydh(params);
+        return xcxService.getmyjf(params);
     }
-
+//获取到我的志愿者申请信息
+@PostMapping("getmyzyz")
+public ResultMap getmyzyz(@RequestBody Map<String,Object> params) {
+    return xcxService.getmyzyz(params);
 }
+}
+
+

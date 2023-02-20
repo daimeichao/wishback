@@ -28,13 +28,17 @@ public class XcxController {
     private XcxService xcxService;
 
 
-    @PostMapping("getUserByOpenId")
-    public ResultMap getUserByOpenId(@RequestBody Map<String,Object> params) {
-        return xcxService.getUserByOpenId(params);
+    @PostMapping("getUserById")
+    public ResultMap getUserById(@RequestBody Map<String,Object> params) {
+        return xcxService.getUserById(params);
     }
     @PostMapping("addUser")
     public ResultMap addUser(@RequestBody Map<String,Object> params) {
         return xcxService.addUser(params);
+    }
+  @PostMapping("updateuser")
+    public ResultMap updateuse(@RequestBody Map<String,Object> params) {
+        return xcxService.updateuse(params);
     }
 
 
@@ -90,6 +94,11 @@ public ResultMap buysp(@RequestBody Map<String,Object> params) {
     @PostMapping("getBannerDetail")
     public ResultMap getBannerDetail(@RequestBody Map<String,Object> params) {
         return xcxService.getBannerDetail(params);
+    }
+//    获取到登录人的志愿者申请信息
+    @PostMapping("getzyzDetail")
+    public ResultMap getzyzDetail(@RequestBody Map<String,Object> params) {
+        return xcxService.getzyzDetail(params);
     }
 
 

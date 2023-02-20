@@ -26,4 +26,6 @@ public interface JfMapper extends BaseMapper<TJf> {
     int spcount(Map<String, Object> params);
 
     Map spdetail(Map<String, Object> params);
+
+
 }

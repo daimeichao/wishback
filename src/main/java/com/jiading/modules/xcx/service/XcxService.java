@@ -92,13 +92,13 @@ public class XcxService {
     }
 
 
-    public ResultMap getUserByOpenId(Map map){
-        String openId = map.get("openId")+"";
-        Map userInfo = xcxDao.getUserByOpenId(openId);
-        if(userInfo!=null){
-            return  ResultMap.ok().put("userInfo",userInfo).put("isUser",true);
+    public ResultMap getUserById(Map map){
+        String pid = map.get("pid")+"";
+        Map userInfo = xcxDao.getUserById(pid);
+        if(userInfo!=null ){
+            return ResultMap.ok().put("detail",userInfo);
         }else{
-            return  ResultMap.ok().put("userInfo",new HashMap<>()).put("isUser",false);
+            return ResultMap.ok().put("detail",new HashMap<>());
         }
     }
 
@@ -163,6 +163,13 @@ public class XcxService {
         Map bannerDetail = xcxDao.getBannerDetail(id);
         return ResultMap.ok().put("bannerDetail",bannerDetail);
     }
+    public ResultMap getzyzDetail(Map map){
+        Map zyzDetail = xcxDao.zyzdetail(map);
+        if(zyzDetail!=null ){
+            return ResultMap.ok().put("detail",zyzDetail);
+        }else{
+            return ResultMap.ok().put("detail",new HashMap<>());
+        }}
     public ResultMap getgooddetail(Map map){
         Map wishDetail = jfMapper.spdetail(map);
         if(wishDetail!=null ){
@@ -181,13 +188,13 @@ public class XcxService {
 
         return ResultMap.ok();
     }
-    public ResultMap getmydh(Map map){
+    public ResultMap getmyjf(Map map){
         Integer pageindex = Integer.parseInt(map.get("pageindex")+"");
         Integer pagesize = Integer.parseInt(map.get("pagesize")+"");
 
         map.put("pageindex",pageindex-1);
 
-        List<Map> wishList = xcxDao.getmydh(map);
+        List<Map> wishList = xcxDao.getmyjf(map);
         Integer total = xcxDao.getdhCount(map);
         BigDecimal totalPage = new BigDecimal(total);
         totalPage =totalPage.divide(new BigDecimal(pagesize),0,BigDecimal.ROUND_UP);
@@ -199,4 +206,20 @@ public class XcxService {
         }
 
     }
-}
+
+    public ResultMap updateuse(Map<String, Object> params) {
+        xcxDao.upduser(params);
+
+        return ResultMap.ok();
+    }
+
+    public ResultMap getmyzyz(Map<String, Object> params) {
+        Map wishDetail = xcxDao.zyzdetail(params);
+        if (wishDetail != null) {
+            return ResultMap.ok().put("detail", wishDetail);
+        } else {
+            return ResultMap.ok().put("detail", new HashMap<>());
+        }
+    }
+
+    }

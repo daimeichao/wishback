@@ -47,10 +47,7 @@ public interface XcxDao {
 
 
 
-    @Select({
-            "select * from t_user where openid=#{openId} limit 1"
-    })
-    Map getUserByOpenId(String openId);
+    Map getUserById(String pid);
 
 
     Integer addUser(Map map);
@@ -83,7 +80,11 @@ public interface XcxDao {
 
     int updkc(Map<String, Object> map);
 
-    List<Map> getmydh(Map map);
+    List<Map<String, Object>> getmyjf(Map<String, Object> map);
 
     int getdhCount(Map map);
+
+    Map zyzdetail(Map map);
+
+    int upduser(Map<String, Object> params);
 }
