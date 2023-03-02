@@ -14,16 +14,7 @@ import java.util.Map;
 @RequestMapping("/xcx/zxdt/")
 @CrossOrigin
 public class ZxdtController {
-	
 
-//	// 客户新增
-//	@RequestMapping("ifexistuser")
-//	@ResponseBody
-//	public Map ifExistClient(HttpServletRequest request, HttpServletResponse response, @RequestParam Map paramsMap,
-//                             HttpSession session) {
-//		Map outmap = clientService.ifExistClient(paramsMap);
-//		return outmap;
-//	}
 
 	@Autowired
 	private ZxdtService zxdtService;

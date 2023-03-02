@@ -51,10 +51,7 @@ public class XMainController {
                 + "&grant_type=authorization_code&time=" + System.currentTimeMillis();
         JSONObject json = JSONObject.parseObject(WebTool.callHtmlGet2(AppletUrl + cs));
         return json;
-        //JSONObject json = new JSONObject();
-        //String openid = "oVqQd5CyN5VoyqEuXDAZfyjwRo_Y";
-        //json.put("openid", openid);
-        //return json;
+
     }
 
 

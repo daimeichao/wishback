@@ -74,7 +74,6 @@ public interface XcxDao {
 
     int getphbCount(Map map);
 
-    int buysp(Map<String, Object> map);
 
     int dejf(Map<String, Object> map);
 
