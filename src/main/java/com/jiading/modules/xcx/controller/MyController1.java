@@ -23,6 +23,18 @@ public class MyController1 {
 public ResultMap getmyzyz(@RequestBody Map<String,Object> params) {
     return xcxService.getmyzyz(params);
 }
+
+    //注册
+    @PostMapping("zhuce")
+    public ResultMap zhuce(@RequestBody Map<String,Object> params) {
+        return xcxService.zhuce(params);
+    }
+
+    //登录
+    @PostMapping("denglu")
+    public ResultMap denglu(@RequestBody Map<String,Object> params) {
+        return xcxService.denglu(params);
+    }
 }
 
 

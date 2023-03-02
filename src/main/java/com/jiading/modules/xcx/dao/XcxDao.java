@@ -86,4 +86,10 @@ public interface XcxDao {
     Map zyzdetail(Map map);
 
     int upduser(Map<String, Object> params);
+
+    int zhuce(Map<String, Object> params);
+
+    int getZh(Map<String, Object> params);
+
+    Map getUser(Map<String, Object> params);
 }

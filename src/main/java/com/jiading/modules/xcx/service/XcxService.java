@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class XcxService {
@@ -222,4 +219,37 @@ public class XcxService {
         }
     }
 
+    public ResultMap zhuce(Map<String, Object> params) {
+        Date date = new Date();
+        String name = "昵称" + date.getTime();
+        params.put("name",name );
+        params.put("nick",name );
+        params.put("portrait","https://img2.baidu.com/it/u=2833484760,1116678162&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" );//头像
+
+        //先查询是否存在该账号
+        int i = xcxDao.getZh(params);
+        if(i > 0){
+            //账号存在
+            return ResultMap.ok().put("return", "false");
+        }else {
+            xcxDao.zhuce(params);
+        }
+        return ResultMap.ok().put("return", "true");
+
     }
+    public ResultMap denglu(Map<String, Object> params) {
+        Map map = xcxDao.getUser(params);
+        if(map == null){
+            //用户名不存在
+            return ResultMap.ok().put("return", "yhmbzc");
+        }else {
+            String password = map.get("password").toString();
+            String mima = params.get("mima").toString();
+            if(mima.equals(password)){
+                return ResultMap.ok().put("return", "true");
+            }else {
+                return ResultMap.ok().put("return", "mmcw");
+            }
+        }
+    }
+}

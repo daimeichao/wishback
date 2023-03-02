@@ -185,4 +185,29 @@
     <select id="getUserById" parameterType="map" resultType="map">
         select * from t_user where pid=#{pid}
     </select>
+    <insert id="zhuce" parameterType="map">
+        insert into t_user (
+name,
+nick,
+portrait,
+account,
+password,
+type
+)value (
+#{name},
+#{nick},
+#{portrait},
+#{phone},
+#{mima},
+'1'
+)
+    </insert>
+    <select id="getZh" parameterType="map" resultType="int">
+        select count(1)
+        from t_user where account=#{phone} and del='0'
+    </select>
+    <select id="getUser" parameterType="map" resultType="map">
+        select *
+        from t_user where account=#{phone} and del='0'
+    </select>
 </mapper>
