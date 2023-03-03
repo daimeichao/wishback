@@ -242,17 +242,21 @@ public class XcxService {
         Map map = xcxDao.getUser(params);
         if(map == null){
             //用户名不存在
-            return resultMap.put("return", "yhmbzc");
+            resultMap.put("return", "yhmbzc");
+            return ResultMap.ok(resultMap);
         }else {
             String password = map.get("password").toString();
             String mima = params.get("mima").toString();
             if(mima.equals(password)){
                 resultMap.put("return","true");
                 resultMap.put("userinfo",map);
-                return ResultMap.ok(resultMap);
+
             }else {
-                return resultMap.put("return", "mmcw");
+                resultMap.put("return", "mmcw");
+
             }
+            return ResultMap.ok(resultMap);
+
         }
     }
 }
