@@ -19,9 +19,6 @@ public class JbrfcService {
 
     @Autowired
     private JbrfcDao jbrfcDao;
-
-
-
     public ResultMap getJbrList(Map<String, Object> params) {
         ResultMap resultMap = new ResultMap();
         int pageindex = FenYe.pageindex(params.get("curpage"), params.get("pagesize"));
@@ -36,12 +33,10 @@ public class JbrfcService {
                 String[] strs = list.get(i).get("hdjx").toString().split(",");
                 System.out.println(strs.toString());
                 list.get(i).put("hdjxList",strs);
-            }
-            params.put("yhid",list.get(i).get("pid"));
+            }params.put("yhid",list.get(i).get("pid"));
             List<Map> jblist = jbrfcDao.getJbjlList(params);
             list.get(i).put("jbList",jblist);
-        }
-        int pagecount = FenYe.pagecount(count, pagesize);
+        }int pagecount = FenYe.pagecount(count, pagesize);
         resultMap.put("pagecount", pagecount);
         resultMap.put("count", count);
         resultMap.put("list",list);

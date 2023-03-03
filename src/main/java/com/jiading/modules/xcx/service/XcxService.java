@@ -238,17 +238,20 @@ public class XcxService {
 
     }
     public ResultMap denglu(Map<String, Object> params) {
+        ResultMap resultMap=new ResultMap();
         Map map = xcxDao.getUser(params);
         if(map == null){
             //用户名不存在
-            return ResultMap.ok().put("return", "yhmbzc");
+            return resultMap.put("return", "yhmbzc");
         }else {
             String password = map.get("password").toString();
             String mima = params.get("mima").toString();
             if(mima.equals(password)){
-                return ResultMap.ok().put("return", "true");
+                resultMap.put("return","true");
+                resultMap.put("userinfo",map);
+                return ResultMap.ok(resultMap);
             }else {
-                return ResultMap.ok().put("return", "mmcw");
+                return resultMap.put("return", "mmcw");
             }
         }
     }
