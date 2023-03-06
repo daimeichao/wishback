@@ -55,11 +55,11 @@
             a.wishusername,
             a.wish_content,
             a.adder,
-            a.wish_time,
+            date_format(a.wish_time,'%Y-%m-%d') wishTime,
             a.wish_audit_remark,
             b.claimant_audit_remark,
             b.claimant,
-            b.realize_time,
+            date_format(b.realize_time,'%Y-%m-%d') sxtime,
             b.claimantid,
             b.expressage,
             b.claimant_audit_state
@@ -74,5 +74,20 @@
         SELECT url
         FROM t_wish_file
         where t_wish_file.wishid = (SELECT pid FROM t_wish_claimant WHERE wishid = #{pid})
+    </select>
+    <select id="getListById" resultType="java.util.Map" >
+        select a.pid as id,b.pid as tid, a.wishusername, a.wishuserid,a.wish_content,
+               a.adder,  date_format(a.wish_time,'%Y-%m-%d')wishtime, a.wish_audit_state,a.wish_audit_remark,
+               a.wish_auditid, a.wish_state,a.operatorid ,a.add_time as fbat,
+               a.update_time as fbut,a.sort,a.price,
+               b.claimant, b.claimantid,date_format(b.realize_time,'%Y-%m-%d')sxtime,b.expressage, b.claimant_audit_state,b.claimant_audit_remark,b.wishid,
+               b.claimant_auditid, b.operatorid ,b.add_time as sxat ,b.update_time as sxut,c.name,group_concat(c.url) as url
+        from t_wish as a
+                 left join t_wish_claimant as b
+                           on a.pid=b.wishid and b.claimant_audit_state !='2' and b.del='0'
+        left join t_wish_file as c
+        on c.wishid=b.pid and c.del='0'
+        where a.del='0' and a.pid=#{pid}
+        GROUP BY a.pid
     </select>
 </mapper>

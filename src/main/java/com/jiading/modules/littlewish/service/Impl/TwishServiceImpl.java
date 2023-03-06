@@ -37,7 +37,8 @@ public class TwishServiceImpl implements TwishService {
 
     @Override
     public List<Wish> getfullwishbypid(Integer pid) {
-        return TwishMapper.getfullwishbypid(pid);
+//        return TwishMapper.getfullwishbypid(pid);
+        return TwishMapper.getListById(pid);
     }
 
     @Override

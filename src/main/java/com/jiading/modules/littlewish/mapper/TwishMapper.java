@@ -6,6 +6,7 @@ import com.jiading.modules.littlewish.domain.Wish;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface TwishMapper {
@@ -20,4 +21,5 @@ public interface TwishMapper {
     List<Wish> getfullwishbypid(Integer pid);
 
     List<TWishFile> geturlbypid(Integer pid);
+    List<Wish> getListById(Integer pid);
 }
