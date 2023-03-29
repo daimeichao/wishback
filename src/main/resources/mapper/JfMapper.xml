@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jiading.modules.back.mapper.JfMapper">
     <select id="getListByMap" resultType="java.util.Map">
-        select a.pid as jid ,b.pid as uid,a.userid, a.change ,a.changenum,a.remark,a.jf_audit_state,
-        a.jf_audit_remark, a.operatorid, a.add_time, a.update_time, a.del,b.name as name
+        select a.pid as jid ,b.pid as uid,a.userid, a.change1 ,a.changenum,a.remark,
+         a.operatorid, a.add_time, a.update_time, a.del,b.name as name
         from t_jf a left  join t_user b on b.pid =a.userid
-        where a.del = '0' and b.del='0'
+        where a.del = '0' and b.del='0' and b.type='1'
         <if test="name != null and name != '' ">
             and b. name LIKE CONCAT('%',#{name},'%')
         </if>
@@ -17,7 +17,7 @@
     <select id="getListCountByMap" resultType="java.lang.Integer">
         select count(*)
         from t_jf a left  join t_user b on b.pid =a.userid
-        where a.del = '0' and b.del='0'
+        where a.del = '0' and b.del='0' and b.type='1'
         <if test="name != null and name != '' ">
             and b. name LIKE CONCAT('%',#{name},'%')
         </if>
@@ -30,16 +30,16 @@
         update t_jf set del='1' where userid=#{userid}
     </update>
     <select id="getdetail" parameterType="map" resultType="map">
-        select a.pid as jid ,b.pid as uid,a.userid, a.change ,a.jf_origin,a.changenum,a.remark,a.jf_audit_state,
-               a.jf_audit_remark, a.operatorid, a.add_time, a.update_time, a.del,b.name as name
+        select a.pid as jid ,b.pid as uid,a.userid, a.change1 ,a.jf_origin,a.changenum,a.remark,
+               a.operatorid, a.add_time, a.update_time, a.del,b.name as name
         from t_jf a left  join t_user b on b.pid =a.userid where  a.pid=#{pid}
     </select>
     <insert id="addsp" parameterType="map">
-        insert into t_sp (spname,spprice,spxq,kc,add_time,upd_time,url,del,operatorid)
-        values (#{spname},#{spprice},#{spxq},#{kc},now(),now(),#{url},'0',#{operatorid});
+        insert into t_sp (spname,spprice,spxq,kc,add_time,upd_time,url,del)
+        values (#{spname},#{spprice},#{spxq},#{kc},now(),now(),#{url},'0');
     </insert>
     <update id="updsp" parameterType="map">
-        update t_sp set spname=#{spname},spprice=#{spprice},sqxp=#{spxq},kc=#{kc},
+        update t_sp set spname=#{spname},spprice=#{spprice},spxq=#{spxq},kc=#{kc},
                         upd_time=now(),url=#{url} where pid=#{pid}
     </update>
     <update id="delsp" parameterType="map">

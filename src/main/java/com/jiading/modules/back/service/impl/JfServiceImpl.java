@@ -41,6 +41,7 @@ public class JfServiceImpl extends ServiceImpl<JfMapper, TJf> implements JfServi
             outmap.put("count", count);
             outmap.put("list", list);
             outmap.put("search", params);
+            outmap.put("result","success");
         } catch (Exception e) {
             e.printStackTrace();
             outmap.put("curpage", 1);
@@ -48,6 +49,7 @@ public class JfServiceImpl extends ServiceImpl<JfMapper, TJf> implements JfServi
             outmap.put("count", 0);
             outmap.put("list", new ArrayList<Map<String, Object>>());
             outmap.put("search", params);
+            outmap.put("result","err");
         }
         return outmap;
     }
@@ -97,6 +99,7 @@ public class JfServiceImpl extends ServiceImpl<JfMapper, TJf> implements JfServi
             outmap.put("count", count);
             outmap.put("list", list);
             outmap.put("search", params);
+            outmap.put("result","success");
         } catch (Exception e) {
             e.printStackTrace();
             outmap.put("curpage", 1);
@@ -104,6 +107,7 @@ public class JfServiceImpl extends ServiceImpl<JfMapper, TJf> implements JfServi
             outmap.put("count", 0);
             outmap.put("list", new ArrayList<Map<String, Object>>());
             outmap.put("search", params);
+            outmap.put("result","err");
         }
         return outmap;
     }

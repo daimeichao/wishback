@@ -30,7 +30,7 @@
     </select>
 <!--积分排行榜-->
     <select id="getphb" resultType="map">
-        select u.name,u.portrait,sum(j.changenum)as zf ,j.userid ,j.pid as jid from t_jf j  left join t_user u on u.pid=j.userid where u.del='0' and j.del='0' and j.change1='0'
+        select u.name,u.portrait,sum(j.changenum)as zf ,j.userid ,j.pid as jid from t_jf j  left join t_user u on u.pid=j.userid where u.del='0' and j.del='0' and j.change1='0'and u.type='1'
         <if test="name != null and name != '' ">
             and name LIKE CONCAT('%',#{name},'%')
         </if>
@@ -43,7 +43,7 @@
     <select id="getphbCount" resultType="int">
         select
             count(*)
-        from t_jf j  left join t_user u on u.pid=j.userid where u.del='0' and j.del='0' and j.change1='0'
+        from t_jf j  left join t_user u on u.pid=j.userid where u.del='0' and j.del='0' and j.change1='0' and u.type='1'
 
         <if test="name != null and name != '' ">
             and name LIKE CONCAT('%',#{name},'%')
