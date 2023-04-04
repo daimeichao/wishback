@@ -105,11 +105,18 @@ public class ZyzServiceImpl extends ServiceImpl<ZyzMapper, TZyz> implements ZyzS
         }
         return outmap;
     }
+
     @Override
     public Map shById(Map<String, Object> params){
         Map outmap = new HashMap();
         try {
             zyzMapper.shById(params);
+            if("1".equals (String.valueOf (params.get("zyz_audit_state")))){
+                params.put("zyzzt","2");
+            }
+            else {
+                params.put("zyzzt","0");}
+            zyzMapper.updzt(params);
             outmap.put("result","success");
         } catch (Exception e) {
             e.printStackTrace();

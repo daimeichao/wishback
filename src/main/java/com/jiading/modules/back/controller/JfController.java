@@ -33,6 +33,13 @@ public class JfController {
         Map<String, Object> outmap =jfService.getById(params);
         return ResultMap.ok().put("outmap", outmap);
     }
+//    充值积分
+//积分详情
+@PostMapping("/czjf")
+public ResultMap czjf(@RequestBody Map<String, Object> params) {
+    Map<String, Object> outmap =jfService.czjf(params);
+    return ResultMap.ok().put("outmap", outmap);
+}
 //    积分排行榜
 @PostMapping("getphb")
 public ResultMap getphb(@RequestBody Map<String, Object> params) {

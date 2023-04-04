@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jiading.common.util.FenYe;
 import com.jiading.modules.back.domain.Wish;
 import com.jiading.modules.back.domain.WishClainmant;
+import com.jiading.modules.back.mapper.JfMapper;
 import com.jiading.modules.back.mapper.WishClainmantMapper;
 import com.jiading.modules.back.mapper.WishMapper;
 import com.jiading.modules.back.service.WishClainmantService;
@@ -156,7 +157,8 @@ public class WishClainmantServiceImpl extends ServiceImpl<WishClainmantMapper, W
         }
         return outmap;
     }
-
+@Autowired
+    JfMapper jfMapper;
     @Override
     public Map updateWishById1(Map<String, Object> params){
         Map outmap = new HashMap();
@@ -167,6 +169,8 @@ public class WishClainmantServiceImpl extends ServiceImpl<WishClainmantMapper, W
 //            当认领审核通过时，将心愿状态改为已完成
             if("1".equals (String.valueOf (params.get("claimant_audit_state")))){
                 params.put("wish_state","2");
+//                实现人积分新增50积分
+                jfMapper.addjf(params);
             }
 //            当审核不通过时，将心愿状态改为待审核xxx
             else if (("2".equals (String.valueOf (params.get("claimant_audit_state"))))){

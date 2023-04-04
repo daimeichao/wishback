@@ -58,7 +58,7 @@
     </select>
     <select id="spcount" resultType="java.lang.Integer">
         select count(*)
-        from t_sp where del='0'
+        from t_sp where del='0' and kc  <![CDATA[>=]]>1
         <if test="spname != null and spname != '' ">
             and spname LIKE CONCAT('%',#{name},'%')
         </if>
@@ -66,5 +66,10 @@
         </select>
     <select id="spdetail" parameterType="map" resultType="map">
         select  *from t_sp where del='0' and pid=#{pid}</select>
-
+<insert id="addjf" parameterType="map">
+    insert into t_jf(userid,remark,operatorid,add_time,changenum,del,change1) values(#{claimant_auditid},'实现他人心愿',#{operatorid},now(),50,'0','0')
+</insert>
+    <insert id="czjf" parameterType="map">
+        insert into t_jf(userid,remark,add_time,changenum,del,change1) values(#{userid},'充值',now(),#{changenum},'0','0')
+    </insert>
 </mapper>

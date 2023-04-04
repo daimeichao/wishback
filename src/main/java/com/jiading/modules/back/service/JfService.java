@@ -22,4 +22,6 @@ public interface JfService extends IService<TJf> {
     Map<String, Object> spById(Map<String, Object> params);
 
     Map<String, Object>getphb(Map<String, Object> params);
+
+    Map<String, Object> czjf(Map<String, Object> params);
 }

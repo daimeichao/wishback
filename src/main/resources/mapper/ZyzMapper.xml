@@ -65,7 +65,7 @@
         <if test="zyz_audit_remark !=null and zyz_audit_remark!=''">
             zyz_audit_remark=#{zyz_audit_remark},
         </if></set>
-        where pid=#{pid}
+        where pid=#{zid}
     </update>
     <insert id="addzyz" parameterType="map" >
         insert  into t_zyz (zyzid, zyzname,sq_time,reason,zyz_audit_state,add_time,update_time,del ,tx,operatorid)
@@ -73,5 +73,8 @@
     </insert>
     <update id="updById" parameterType="map">
         update t_zyz set zyzname=#{zyzname},sq_time=#{sq_time},reason=#{reason},update_time=now(),tx=#{tx} where pid=#{pid}
+    </update>
+    <update id="updzt" parameterType="map">
+        update t_user set zyzzt=#{zyzzt} where pid=#{zyzid}
     </update>
 </mapper>

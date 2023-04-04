@@ -205,4 +205,19 @@ public class JfServiceImpl extends ServiceImpl<JfMapper, TJf> implements JfServi
         }
         return outmap;
     }
+//   小程序 充值积分
+@Override
+public Map czjf(Map<String, Object> params){
+    Map outmap = new HashMap();
+
+    try {
+        jfMapper.czjf(params);
+        outmap.put("status","success");
+    } catch (Exception e) {
+        e.printStackTrace();
+        outmap.put("result","err");
+    }
+    return outmap;
+}
+
 }

@@ -27,5 +27,8 @@ public interface JfMapper extends BaseMapper<TJf> {
 
     Map spdetail(Map<String, Object> params);
 
+//实现他人愿望新增积分
+    int addjf(Map<String, Object> params);
 
+    int czjf(Map<String, Object> params);
 }
