@@ -174,7 +174,7 @@
         select count( * )from t_jf where del='0' and change1='1'and userid=#{pid}
     </select>
     <select id="zyzdetail" parameterType="map" resultType="map">
-        select u.name ,u.zyzzt ,z.zyzid,z.zyzname,DATE_FORMAT(z.sq_time ,'%Y-%m-%d ')sq_time,z. reason,z. del,z.  tx
+        select u.name ,u.zyzzt ,z.zyzid,z.zyzname,DATE_FORMAT(z.sq_time ,'%Y-%m-%d ')sq_time,z. reason,z. del,z.  tx,z.zyz_audit_state
         from t_user u left join t_zyz z on u.pid=z.zyzid
         where u.pid=#{pid} and z.del='0 ' and u.del='0'
  </select>

@@ -17,9 +17,6 @@ public interface XcxDao {
             "select pid,content,url,link,type,add_time from t_banner where del=0"
     })
     List<Map> getBannerList();
-
-
-
     // 愿望列表
     List<Map> getWishList(Map map);
 //    积分排行榜
