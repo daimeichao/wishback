@@ -22,7 +22,6 @@ public class XcxService {
     public ResultMap getBannerList(){
 
         List<Map> bannerList = xcxDao.getBannerList();
-
         if(bannerList!= null && bannerList.size()>0){
             return  ResultMap.ok().put("bannerLilst",bannerList);
         }else{
@@ -34,40 +33,32 @@ public class XcxService {
     public ResultMap getWishList(Map map){
         Integer pageindex = Integer.parseInt(map.get("pageindex")+"");
         Integer pagesize = Integer.parseInt(map.get("pagesize")+"");
-
         map.put("pageindex",pageindex-1);
-
         List<Map> wishList = xcxDao.getWishList(map);
         Integer total = xcxDao.getWishCount(map);
         BigDecimal totalPage = new BigDecimal(total);
         totalPage =totalPage.divide(new BigDecimal(pagesize),0,BigDecimal.ROUND_UP);
-
         if(wishList!= null && wishList.size()>0){
             return  ResultMap.ok().put("wishList",wishList).put("total",totalPage);
         }else{
             return  ResultMap.ok().put("wishList",new ArrayList<>()).put("total",0);
         }
-
     }
 
 
     public ResultMap getphb(Map map){
         Integer pageindex = Integer.parseInt(map.get("pageindex")+"");
         Integer pagesize = Integer.parseInt(map.get("pagesize")+"");
-
         map.put("pageindex",pageindex-1);
-
         List<Map> wishList = xcxDao.getphb(map);
         Integer total = xcxDao.getphbCount(map);
         BigDecimal totalPage = new BigDecimal(total);
         totalPage =totalPage.divide(new BigDecimal(pagesize),0,BigDecimal.ROUND_UP);
-
         if(wishList!= null && wishList.size()>0){
             return  ResultMap.ok().put("wishList",wishList).put("total",totalPage);
         }else{
             return  ResultMap.ok().put("wishList",new ArrayList<>()).put("total",0);
         }
-
     }
 
     public ResultMap getgood(Map map){
@@ -142,19 +133,14 @@ public class XcxService {
         xcxDao.realizationWish(map);
         return ResultMap.ok().put("wishClaimant",map);
     }
-
-
-
     public ResultMap addWish(Map map){
         xcxDao.addWish(map);
         return ResultMap.ok();
     }
-
     public ResultMap addFile(Map map){
         xcxDao.addFile(map);
         return ResultMap.ok();
     }
-
     public ResultMap getBannerDetail(Map map){
         String id = map.get("id")+"";
         Map bannerDetail = xcxDao.getBannerDetail(id);
@@ -176,30 +162,27 @@ public class XcxService {
         }
 
 }
-
     public ResultMap buysp(Map<String, Object> map) {
 //        新增积分变化数据，消费多少积分（spprice）
         xcxDao.dejf(map);
 //        减少库存
         xcxDao.updkc(map);
-
         return ResultMap.ok();
     }
     public ResultMap getmyjf(Map map){
         Integer pageindex = Integer.parseInt(map.get("pageindex")+"");
         Integer pagesize = Integer.parseInt(map.get("pagesize")+"");
-
         map.put("pageindex",pageindex-1);
-
         List<Map> wishList = xcxDao.getmyjf(map);
         Integer total = xcxDao.getdhCount(map);
         BigDecimal totalPage = new BigDecimal(total);
         totalPage =totalPage.divide(new BigDecimal(pagesize),0,BigDecimal.ROUND_UP);
-
+//        剩余积分
+        int jfnum= xcxDao.getjfnum(map);
         if(wishList!= null && wishList.size()>0){
-            return  ResultMap.ok().put("wishList",wishList).put("total",totalPage);
+            return  ResultMap.ok().put("wishList",wishList).put("total",totalPage).put("jfnum",jfnum);
         }else{
-            return  ResultMap.ok().put("wishList",new ArrayList<>()).put("total",0);
+            return  ResultMap.ok().put("wishList",new ArrayList<>()).put("total",0).put("jfnum",0);
         }
 
     }

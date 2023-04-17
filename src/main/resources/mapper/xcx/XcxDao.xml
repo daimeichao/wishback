@@ -30,7 +30,7 @@
     </select>
 <!--积分排行榜-->
     <select id="getphb" resultType="map">
-        select u.name,u.portrait,sum(j.changenum)as zf ,j.userid ,j.pid as jid from t_jf j  left join t_user u on u.pid=j.userid where u.del='0' and j.del='0' and j.change1='0'and u.type='1'
+        select u.name,u.portrait,j.userid ,j.pid as jid from t_jf j  left join t_user u on u.pid=j.userid where u.del='0' and j.del='0' and u.type='1'
         <if test="name != null and name != '' ">
             and name LIKE CONCAT('%',#{name},'%')
         </if>
@@ -209,5 +209,27 @@ type
     <select id="getUser" parameterType="map" resultType="map">
         select *
         from t_user where account=#{phone} and del='0'
+    </select>
+    <select id="getjfnum" resultType="int">
+        select s1-s2 as jf from
+        ((select SUM(changenum) as s1 from t_jf where change1='0' and userid=#{pid} ) as table1 ,
+        (select SUM(changenum) as s2 from t_jf where change1='1' and userid=#{pid} ) as table2 )
+    </select>
+    <select id="getidlist" parameterType="map" resultType="string">
+        select userid from t_jf where del='0' and userid is not null group by userid
+    </select>
+    <select id="getjf" resultType="map" parameterType="map">
+        select u.name,u.portrait,sum(j.changenum)as zf ,j.userid ,j.pid as jid from t_jf j  left join t_user u on u.pid=j.userid where u.del='0' and j.del='0' and j.change1='0'and u.type='1'
+        and userid=#{pid}
+        <if test="name != null and name != '' ">
+            and name LIKE CONCAT('%',#{name},'%')
+        </if>
+    </select>
+    <select id="addjf" resultType="int">
+        select  sum(changenum) as jf from t_jf where change1='0' and userid=#{pid}
+
+    </select>
+    <select id="cutjf" resultType="int">
+        select SUM(changenum) as jf from t_jf where change1='1' and userid=#{pid}
     </select>
 </mapper>

@@ -67,26 +67,19 @@ public interface XcxDao {
             "select * from t_banner where pid = #{id}"
     })
     Map getBannerDetail(String id);
-
-
     int getphbCount(Map map);
-
-
     int dejf(Map<String, Object> map);
-
     int updkc(Map<String, Object> map);
-
     List<Map<String, Object>> getmyjf(Map<String, Object> map);
-
     int getdhCount(Map map);
-
     Map zyzdetail(Map map);
-
     int upduser(Map<String, Object> params);
-
     int zhuce(Map<String, Object> params);
-
     int getZh(Map<String, Object> params);
-
     Map getUser(Map<String, Object> params);
+    int getjfnum(Map map);
+    List<String> getidlist(Map<String, Object> params);
+    Map getjf(Map<String, Object> params);
+    int addjf(Map<String, Object> params);
+    int cutjf(Map<String, Object> params);
 }

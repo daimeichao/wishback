@@ -83,6 +83,8 @@ public class JfServiceImpl extends ServiceImpl<JfMapper, TJf> implements JfServi
         Map outmap = new HashMap();
         List<Map<String, Object>> list = new ArrayList<>(); //当前页的展示列表
         try {
+//            获取积分表的userid
+                List <String> idlist=xcxDao.getidlist(params);
             int pageindex = FenYe.pageindex(params.get("curpage"), params.get("pagesize"));
             int pagesize = FenYe.pagesize(params.get("pagesize"));
             int count = 0;
@@ -92,6 +94,23 @@ public class JfServiceImpl extends ServiceImpl<JfMapper, TJf> implements JfServi
             list =  xcxDao.getphb(params); // 返回当前页的展示列表
             count =  xcxDao.getphbCount(params); // 计算真实数据总数
             pagecount = FenYe.pagecount(count, pagesize);
+            for (int i = 0; i <idlist.size() ; i++) {
+                String userid=idlist.get(i);
+                params.put("pid",userid);
+                int addjf=xcxDao.addjf(params);
+                int cutjf=xcxDao.cutjf(params);
+//                int jf=xcxDao.getjfnum(params);
+                String jf=addjf-cutjf+"";
+                for (int j = 0; j <list.size(); j++) {
+                    list.get(j).put("jf",jf);
+                    list.get(j).put("addjf",addjf+"");
+                    list.get(j).put("cutjf",cutjf+"");
+                }
+//                Map map=xcxDao.getjf(params);
+//                map.put("jf",jf);
+//               list.add(map);
+            }
+
             // 返回
             outmap.put("pagecount", pagecount); // 返回总页数
             outmap.put("curpage", FenYe.curpage(params.get("curpage")));
