@@ -224,7 +224,7 @@ public class XcxService {
         String name = "昵称" + date.getTime();
         params.put("name",name );
         params.put("nick",name );
-        params.put("portrait","https://img2.baidu.com/it/u=2833484760,1116678162&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500" );//头像
+        params.put("portrait","/upload/xy/xy1681613150484cazkm.png" );//头像
 
         //先查询是否存在该账号
         int i = xcxDao.getZh(params);

@@ -329,45 +329,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
     @Override
     public ResultMap updateNowPassword(Map<String, Object> params) {
-        String pid = (String)params.get("pid");
-        if (pid == null || "".equals(pid)) {
-            return ResultMap.error("请选择要更改的用户");
+        Map<String, Object> outmap = new HashMap<>();
+        try {
+            String oldPassWord =  params.get("oldPassWord").toString();
+            String newPassWord =  params.get("password").toString();
+//          配置表中查找密码
+            String passWord = userMapper.getmm(params);
+//         判断密码是否正确
+            if (!oldPassWord.equals(passWord)) {
+                outmap.put("msg", "旧密码错误");
+                return ResultMap.ok().put("outmap", outmap);
+            }
+            params.put("password", newPassWord);
+            userMapper.updxcxmm(params);
+            outmap.put("status", "success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            outmap.put("status", "err");
+            outmap.put("msg", "错误");
         }
-//        String lb = user.getLb();
-//        if (!"1".equals(lb)) {
-//            return ResultMap.error("不是工作人员无法重置密码");
-//        }
-        String old_password = (String)params.get("old_password");
-        User user = userMapper.selectOne(new QueryWrapper<User>()
-                .eq("pid",params.get("pid"))
-                .eq("del","0")
-        );
-        if (user == null) {
-            return ResultMap.error("用户不存在");
-        }
-
-//        if (!"1".equals(user.getLb())) {
-//            return ResultMap.error("该账号不是工作人员");
-//        }
-
-        if (!user.getPassword().equals(Md5.MD5Encode(old_password))) {
-            return ResultMap.error("密码错误");
-        }
-
-
-        String mm = (String)params.get("new_password");
-        if (StringUtils.isBlank(mm)) {
-            return ResultMap.error("请输入新的密码");
-        }
-
-        String md5Password = Md5.MD5Encode(mm);
-        System.out.println("[md5Password]: " + md5Password);
-//        int i = userMapper.updatePassword(md5Password, pid);
-        int i = userMapper.update(null, new UpdateWrapper<User>().eq("pid",params.get("pid") ).set("password",md5Password));
-        if (i != 1) {
-            return ResultMap.error("修改失败");
-        }
-        return ResultMap.ok();
+        return ResultMap.ok().put("outmap", outmap);
     }
 
     @Override

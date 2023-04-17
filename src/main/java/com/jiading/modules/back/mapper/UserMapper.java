@@ -58,6 +58,10 @@ public interface UserMapper extends BaseMapper<User> {
     List<Map> getSchoolInfo(Map<String, Object> params);
 
     List<User> selectListWithSchool(List<Integer> yhidList);
+    @Select("SELECT password FROM t_user where pid=#{pid}")
+    String getmm(Map<String, Object> params);
+    @Update("UPDATE t_user SET password = #{password} where pid=#{pid}")
+    void updxcxmm(Map<String, Object> params);
 }
 
 
