@@ -50,7 +50,7 @@ public class XcxService {
         Integer pageindex = Integer.parseInt(map.get("pageindex")+"");
         Integer pagesize = Integer.parseInt(map.get("pagesize")+"");
         map.put("pageindex",pageindex-1);
-        List<Map> wishList = xcxDao.getphb(map);
+        List<Map> wishList = xcxDao.xcxphb(map);
         Integer total = xcxDao.getphbCount(map);
         BigDecimal totalPage = new BigDecimal(total);
         totalPage =totalPage.divide(new BigDecimal(pagesize),0,BigDecimal.ROUND_UP);
@@ -162,12 +162,19 @@ public class XcxService {
         }
 
 }
-    public ResultMap buysp(Map<String, Object> map) {
+    public  Map buysp(Map<String, Object> map) {
+        Map outmap = new HashMap();
 //        新增积分变化数据，消费多少积分（spprice）
+        map.put("pid",map.get("userid"));
+        int addjf=xcxDao.addjf(map);
+        int cutjf=xcxDao.cutjf(map);
+        int jf=addjf-cutjf;
         xcxDao.dejf(map);
 //        减少库存
         xcxDao.updkc(map);
-        return ResultMap.ok();
+        outmap.put("jf",jf);
+        outmap.put("status","success");
+        return outmap;
     }
     public ResultMap getmyjf(Map map){
         Integer pageindex = Integer.parseInt(map.get("pageindex")+"");

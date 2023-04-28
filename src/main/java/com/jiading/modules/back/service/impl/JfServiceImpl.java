@@ -99,16 +99,12 @@ public class JfServiceImpl extends ServiceImpl<JfMapper, TJf> implements JfServi
                 params.put("pid",userid);
                 int addjf=xcxDao.addjf(params);
                 int cutjf=xcxDao.cutjf(params);
-//                int jf=xcxDao.getjfnum(params);
                 String jf=addjf-cutjf+"";
                 for (int j = 0; j <list.size(); j++) {
-                    list.get(j).put("jf",jf);
-                    list.get(j).put("addjf",addjf+"");
-                    list.get(j).put("cutjf",cutjf+"");
+                    list.get(j).put("jf", jf);
+                    list.get(j).put("addjf", addjf + "");
+                    list.get(j).put("cutjf", cutjf + "");
                 }
-//                Map map=xcxDao.getjf(params);
-//                map.put("jf",jf);
-//               list.add(map);
             }
 
             // 返回

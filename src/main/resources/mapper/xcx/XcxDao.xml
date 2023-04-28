@@ -40,6 +40,17 @@
             LIMIT #{pageindex},#{pagesize}
         </if>
     </select>
+    <select id="xcxphb" resultType="map">
+        select u.name,u.portrait,j.userid ,j.pid as jid ,sum(changenum) as zf from t_jf j  left join t_user u on u.pid=j.userid where   j.del='0' and u.type='1' and j.change1='0'
+        <if test="name != null and name != '' ">
+            and name LIKE CONCAT('%',#{name},'%')
+        </if>
+        group
+        by userid
+        <if test="pageindex != null and pagesize != null">
+            LIMIT #{pageindex},#{pagesize}
+        </if>
+    </select>
     <select id="getphbCount" resultType="int">
         select
             count(*)
@@ -159,7 +170,7 @@
     </insert>
 <insert id="dejf" parameterType="map">
     insert into t_jf (userid,remark,changenum,change1,add_time,del)
-    values (#{userid},#{remark},#{changenum},'1',now(),'0')
+    values (#{pid},#{remark},#{changenum},'1',now(),'0')
 </insert>
     <update id="updkc" parameterType="map">
         update t_sp  set kc=#{kc} where pid=#{sppid}
@@ -227,7 +238,6 @@ type
     </select>
     <select id="addjf" resultType="int">
         select  sum(changenum) as jf from t_jf where change1='0' and userid=#{pid}
-
     </select>
     <select id="cutjf" resultType="int">
         select SUM(changenum) as jf from t_jf where change1='1' and userid=#{pid}

@@ -23,6 +23,7 @@ public interface XcxDao {
 //    List<Map> getphb(Map map);
     Integer getWishCount(Map map);
     List<Map<String, Object>> getphb(Map<String, Object> params);
+    List<Map<String, Object>> xcxphb(Map<String, Object> params);
     // 愿望详情
     Map getWishDetail(Map map);
 

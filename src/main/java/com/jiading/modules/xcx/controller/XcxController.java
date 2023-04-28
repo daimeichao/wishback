@@ -70,7 +70,8 @@ public ResultMap getgooddetail(@RequestBody Map<String,Object> params) {
 //兑换商品
 @PostMapping("buysp")
 public ResultMap buysp(@RequestBody Map<String,Object> params) {
-    return xcxService.buysp(params);
+    Map<String, Object> outmap = xcxService.buysp(params);
+    return ResultMap.ok().put("outmap", outmap);
 }
 
 
